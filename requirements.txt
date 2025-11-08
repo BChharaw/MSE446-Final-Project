@@ -1,0 +1,10 @@
+torch           # replace with appropriate CUDA wheel per https://pytorch.org if you want GPU
+torchaudio      # optional: torchaudio or use librosa+soundfile below
+librosa
+soundfile
+numpy
+matplotlib
+scipy
+tqdm
+# dev / optional
+pytest
