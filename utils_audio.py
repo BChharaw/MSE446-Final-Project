@@ -67,10 +67,18 @@ def istft_np(spec_complex: np.ndarray, hop_length: int = 128):
     """
     if HAS_TORCHAUDIO:
         import torch
-        t = torch.from_numpy(spec_complex).unsqueeze(0)
+        # Convert numpy complex array to a complex torch tensor. Some torchaudio
+        # builds don't provide torchaudio.functional.istft; use torch.istft
+        # (part of PyTorch) which is commonly available.
+        t = torch.from_numpy(spec_complex)
+        # ensure complex dtype
+        if not torch.is_complex(t):
+            t = t.to(torch.complex64)
+        t = t.unsqueeze(0)
         n_fft = (spec_complex.shape[0] - 1) * 2
-        x = torchaudio.functional.istft(t, n_fft=n_fft, hop_length=hop_length,
-                                        win_length=n_fft, window=torch.hann_window(n_fft))
+        # Use torch.istft (safer across torchaudio versions)
+        x = torch.istft(t, n_fft=n_fft, hop_length=hop_length,
+                         win_length=n_fft, window=torch.hann_window(n_fft))
         return x.squeeze(0).numpy()
     else:
         import librosa
