@@ -8,3 +8,4 @@ scipy
 tqdm
 # dev / optional
 pytest
+wandb

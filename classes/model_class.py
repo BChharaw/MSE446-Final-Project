@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from pathlib import Path
-from utils_audio import stft_np, istft_np, magphase
+from classes.utils_audio import stft_np, istft_np, magphase
 
 class SmallDenoiserNetwork(nn.Module):
     """Simple CNN encoder-decoder for speech denoising."""
@@ -55,12 +55,22 @@ class SpeechDenoisingModel:
         loss.backward()
         self.optimizer.step()
         return loss.item()
+
+
     def evaluate_step(self, noisy_magnitude, clean_magnitude):
+        #mismatch
         self.model.eval()
         with torch.no_grad():
             noisy = noisy_magnitude.unsqueeze(1).to(self.device)
             clean = clean_magnitude.unsqueeze(1).to(self.device)
             prediction = self.model(noisy)
+
+            if prediction.shape != clean.shape:
+                min_freq = min(prediction.shape[2], clean.shape[2])
+                min_time = min(prediction.shape[3], clean.shape[3])
+                clean = clean[:, :, :min_freq, :min_time]
+                prediction = prediction[:, :, :min_freq, :min_time]
+
             loss = self.loss_function(prediction, clean)
         return loss.item(), prediction.cpu().squeeze(1).numpy()
 
@@ -70,7 +80,6 @@ class SpeechDenoisingModel:
 
     def load_checkpoint(self):
         self.model.load_state_dict(torch.load(str(self.checkpoint_path), map_location=self.device))
-
     def infer(self, noisy_waveform, n_fft, hop_length):
         spectrum = stft_np(noisy_waveform, n_fft=n_fft, hop_length=hop_length)
         magnitude, phase = magphase(spectrum)
@@ -81,6 +90,14 @@ class SpeechDenoisingModel:
             predicted_log = self.model(input_tensor).cpu().squeeze().numpy()
 
         predicted_magnitude = np.expm1(predicted_log)
+
+        # --- Align shapes to avoid broadcasting errors ---
+        min_freq = min(predicted_magnitude.shape[0], phase.shape[0])
+        min_time = min(predicted_magnitude.shape[1], phase.shape[1])
+        predicted_magnitude = predicted_magnitude[:min_freq, :min_time]
+        phase = phase[:min_freq, :min_time]
+        # ----------------------------------------------
+
         reconstructed = predicted_magnitude * np.exp(1j * phase)
         waveform = istft_np(reconstructed, hop_length=hop_length)
 
