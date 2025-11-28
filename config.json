@@ -10,7 +10,7 @@
     "raw_speech_dir": "data_raw/speech",
     "raw_noise_dir": "data_raw/noise",
     "processed_train_dir": "data_processed/train/audio",
-    "processed_val_dir": "data_processed/val/audio",
+    "processed_val_dir": "data_processed/train/audio",
     "preprocess_vis_dir": "visualizations/preprocess/spectrograms",
     "checkpoint_path": "checkpoints/best.pth",
     "eval_output_dir": "evaluation/results"
@@ -21,30 +21,32 @@
     "gain_range": [0.1, 0.5],
     "noise_probability": 0.9,
     "max_noise_overlays": 4,
-    "num_examples": 600,
+    "num_examples": 2000,
     "num_vis_samples": 10,
     "seed": 0
   },
   "train": {
     "train_split": 0.9,
     "batch_size": 8,
-    "epochs": 5,
-    "learning_rate": 0.001,
+    "epochs": 30,
+    "learning_rate": 0.0005,
     "device": "auto",
     "seed": 0,
-    "experiment_name": "baseline"
+    "experiment_name": "RNN_exp2",
+    "phase_support": false
   },
   "eval": {
     "num_passes": 2,
     "device": "cpu",
-    "sample_index": 0
+    "sample_index": 2,
+    "phase_support": false
   },
   "wandb": {
     "enabled": true,
     "project": "mse446-speech-denoiser",
     "job_type": "train",
     "notes": "",
-    "tags": ["baseline", "cnn"],
+    "tags": ["RNN_exp2"],
     "mode": "online"  
   }
 }

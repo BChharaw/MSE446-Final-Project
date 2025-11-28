@@ -13,6 +13,7 @@ class ProcessedPairDataset(Dataset):
     """
     Uses pre-generated clean/noisy wavs from preprocess.py.
     No dynamic mixing/augmentation.
+    Returns magnitude and phase information.
     """
 
     def __init__(
@@ -22,6 +23,7 @@ class ProcessedPairDataset(Dataset):
         sample_rate: int,
         n_fft: int,
         hop_length: int,
+        return_phase: bool = True,
     ):
         assert len(clean_files) == len(noisy_files)
         self.clean_files = clean_files
@@ -29,6 +31,7 @@ class ProcessedPairDataset(Dataset):
         self.sample_rate = sample_rate
         self.n_fft = n_fft
         self.hop_length = hop_length
+        self.return_phase = return_phase
 
     def __len__(self) -> int:
         return len(self.clean_files)
@@ -43,11 +46,25 @@ class ProcessedPairDataset(Dataset):
         spec_clean = stft_np(clean, n_fft=self.n_fft, hop_length=self.hop_length)
         spec_noisy = stft_np(noisy, n_fft=self.n_fft, hop_length=self.hop_length)
 
-        mag_clean, _ = magphase(spec_clean)
-        mag_noisy, _ = magphase(spec_noisy)
+        mag_clean, phase_clean = magphase(spec_clean)
+        mag_noisy, phase_noisy = magphase(spec_noisy)
 
-        mag_clean = np.log1p(mag_clean).astype(np.float32)
-        mag_noisy = np.log1p(mag_noisy).astype(np.float32)
+        # Log-scale magnitude
+        mag_clean_log = np.log1p(mag_clean).astype(np.float32)
+        mag_noisy_log = np.log1p(mag_noisy).astype(np.float32)
 
-        # DataLoader will stack to (B, F, T); SpeechDenoisingModel adds channel dim
-        return torch.from_numpy(mag_noisy), torch.from_numpy(mag_clean)
+        # Normalize phase to [-1, 1] range (phase is in radians, divide by pi)
+        phase_clean_norm = (np.angle(phase_clean) / np.pi).astype(np.float32)
+        phase_noisy_norm = (np.angle(phase_noisy) / np.pi).astype(np.float32)
+
+        if self.return_phase:
+            # Return: noisy_mag, clean_mag, noisy_phase, clean_phase
+            return (
+                torch.from_numpy(mag_noisy_log),
+                torch.from_numpy(mag_clean_log),
+                torch.from_numpy(phase_noisy_norm),
+                torch.from_numpy(phase_clean_norm),
+            )
+        else:
+            # Backward compatibility: only return magnitudes
+            return torch.from_numpy(mag_noisy_log), torch.from_numpy(mag_clean_log)

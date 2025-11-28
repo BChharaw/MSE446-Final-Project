@@ -36,6 +36,8 @@ EPOCHS = int(TRAIN_CFG["epochs"])
 LEARNING_RATE = float(TRAIN_CFG["learning_rate"])
 EXPERIMENT_NAME = TRAIN_CFG.get("experiment_name", "run")
 
+PHASE_SUPPORT = TRAIN_CFG.get("phase_support", True)
+
 device_cfg = TRAIN_CFG.get("device", "auto")
 if device_cfg == "auto":
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -102,6 +104,7 @@ def init_wandb():
 # Dataset creation
 # -----------------------
 def build_datasets():
+    """Build train and val datasets from preprocessed files on disk."""
     clean_train_files = sorted(TRAIN_AUDIO_DIR.glob("clean_*.wav"))
     noisy_train_files = sorted(TRAIN_AUDIO_DIR.glob("noisy_*.wav"))
 
@@ -122,6 +125,7 @@ def build_datasets():
         sample_rate=SAMPLE_RATE,
         n_fft=N_FFT,
         hop_length=HOP_LENGTH,
+        return_phase=PHASE_SUPPORT,  # Enable phase return based on config
     )
 
     val_dataset = ProcessedPairDataset(
@@ -130,6 +134,7 @@ def build_datasets():
         sample_rate=SAMPLE_RATE,
         n_fft=N_FFT,
         hop_length=HOP_LENGTH,
+        return_phase=PHASE_SUPPORT,  # Enable phase return based on config
     )
 
     return train_dataset, val_dataset
@@ -152,6 +157,7 @@ def main():
         device=DEVICE,
         learning_rate=LEARNING_RATE,
         checkpoint_path=str(CHECKPOINT_PATH),
+        phase_support=PHASE_SUPPORT,
     )
 
     run = init_wandb()
@@ -165,25 +171,44 @@ def main():
         running_loss = 0.0
         count = 0
         train_bar = tqdm(train_loader, desc="Train", unit="batch")
+        if PHASE_SUPPORT:
+            for noisy_mag, clean_mag, noisy_phase, clean_phase in train_bar:
+                loss = model.train_step_with_phase(noisy_mag, clean_mag, noisy_phase, clean_phase)
+                running_loss += loss
+                count += 1
+                global_step += 1
 
-        for noisy_mag, clean_mag in train_bar:
-            loss = model.train_step(noisy_mag, clean_mag)
-            running_loss += loss
-            count += 1
-            global_step += 1
+                avg_loss = running_loss / max(1, count)
+                train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
 
-            avg_loss = running_loss / max(1, count)
-            train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
+                if run is not None:
+                    wandb.log(
+                        {
+                            "train/loss": loss,
+                            "train/avg_loss": avg_loss,
+                            "epoch": epoch + 1,
+                            "step": global_step,
+                        }
+                    )
+        else:
+            for noisy_mag, clean_mag in train_bar:
+                loss = model.train_step(noisy_mag, clean_mag)
+                running_loss += loss
+                count += 1
+                global_step += 1
 
-            if run is not None:
-                wandb.log(
-                    {
-                        "train/loss": loss,
-                        "train/avg_loss": avg_loss,
-                        "epoch": epoch + 1,
-                        "step": global_step,
-                    }
-                )
+                avg_loss = running_loss / max(1, count)
+                train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
+
+                if run is not None:
+                    wandb.log(
+                        {
+                            "train/loss": loss,
+                            "train/avg_loss": avg_loss,
+                            "epoch": epoch + 1,
+                            "step": global_step,
+                        }
+                    )
 
         train_avg = running_loss / max(1, count)
         print(f"Train avg loss: {train_avg:.5f}")
@@ -194,11 +219,19 @@ def main():
         val_bar = tqdm(val_loader, desc="Val  ", unit="batch")
 
         with torch.no_grad():
-            for noisy_mag, clean_mag in val_bar:
-                loss, _ = model.evaluate_step(noisy_mag, clean_mag)
-                val_loss_sum += loss
-                val_count += 1
-                val_avg = val_loss_sum / max(1, val_count)
+            if PHASE_SUPPORT:
+                for noisy_mag, clean_mag, noisy_phase, clean_phase in val_bar:
+                    loss, _ = model.evaluate_step_with_phase(noisy_mag, clean_mag, noisy_phase, clean_phase)
+                    val_loss_sum += loss
+                    val_count += 1
+                    val_avg = val_loss_sum / max(1, val_count)
+                    val_bar.set_postfix(avg=f"{val_avg:.4f}")
+            else:
+                for noisy_mag, clean_mag in val_bar:
+                    loss, _ = model.evaluate_step(noisy_mag, clean_mag)
+                    val_loss_sum += loss
+                    val_count += 1
+                    val_avg = val_loss_sum / max(1, val_count)
                 val_bar.set_postfix(avg=f"{val_avg:.4f}")
 
         val_avg = val_loss_sum / max(1, val_count)

@@ -30,6 +30,8 @@ OUTPUT_DIR = Path(PATHS_CFG["eval_output_dir"])
 NUM_PASSES = int(EVAL_CFG["num_passes"])
 SAMPLE_INDEX = int(EVAL_CFG.get("sample_index", 0))
 
+PHASE_SUPPORT = EVAL_CFG.get("phase_support", True)
+
 device_cfg = EVAL_CFG.get("device", "cpu")
 if device_cfg == "auto":
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -77,6 +79,119 @@ def plot_spectrogram_stack(
     plt.close(fig)
 
 
+def plot_model_architecture(model, out_path: Path, input_shape):  # Changed to 2 channels
+    """
+    Create a visual diagram of the model architecture using torchviz with hooks.
+    """
+    try:
+        from torchviz import make_dot
+        import subprocess
+        
+        # Check if Graphviz is available
+        try:
+            result = subprocess.run(['dot', '-V'], check=True, capture_output=True, text=True)
+            print(f"Graphviz found: {result.stderr.strip()}")
+        except FileNotFoundError:
+            print("Graphviz 'dot' command not found in PATH.")
+            print("Install Graphviz:")
+            print("  macOS: brew install graphviz")
+            print("  Ubuntu/Debian: sudo apt-get install graphviz")
+            print("  Windows: Download from https://graphviz.org/download/")
+            return
+        except subprocess.CalledProcessError as e:
+            print(f"Graphviz error: {e}")
+            return
+
+        print("Creating detailed model architecture diagram with layer-by-layer visualization...")
+        
+        # Create dummy input with requires_grad=True - now with 2 channels for magnitude + phase
+        dummy_input = torch.randn(input_shape, requires_grad=True).to(model.device)
+        
+        # Dictionary to store intermediate outputs
+        layer_outputs = {}
+        hooks = []
+        
+        def get_activation(name):
+            def hook(module, input, output):
+                if isinstance(output, torch.Tensor) and output.requires_grad:
+                    layer_outputs[name] = output
+            return hook
+        
+        # Register hooks for all modules
+        for name, module in model.model.named_modules():
+            if len(list(module.children())) == 0:  # Only leaf modules
+                hook = module.register_forward_hook(get_activation(name))
+                hooks.append(hook)
+        
+        # Set model to training mode and do forward pass
+        model.model.train()
+        output = model.model(dummy_input)
+        
+        # Add final output to layer_outputs
+        layer_outputs['final_output'] = output
+        
+        # Create the main computation graph
+        params_dict = dict(model.model.named_parameters())
+        params_dict['input'] = dummy_input
+        
+        # Create comprehensive graph
+        dot = make_dot(
+            output,
+            params=params_dict,
+            show_attrs=True,
+            show_saved=True
+        )
+        
+        # Customize graph appearance for high quality
+        dot.graph_attr.update({
+            'rankdir': 'TB',
+            'size': '20,30',
+            'dpi': '300',
+            'bgcolor': 'white',
+            'fontsize': '14',
+            'fontname': 'Arial',
+            'resolution': '300'
+        })
+        
+        dot.node_attr.update({
+            'shape': 'box',
+            'style': 'rounded,filled',
+            'fillcolor': 'lightblue',
+            'fontsize': '12',
+            'fontname': 'Arial',
+            'margin': '0.3',
+            'width': '2',
+            'height': '0.8'
+        })
+        
+        dot.edge_attr.update({
+            'fontsize': '10',
+            'fontname': 'Arial'
+        })
+        
+        # Save high-resolution PNG
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        dot.format = "png"
+        dot.render(str(out_path.with_suffix("")), cleanup=True)
+        print(f"High-resolution PNG saved: {out_path}")
+        
+        # Save SVG version
+        svg_path = out_path.with_suffix('.svg')
+        dot.format = "svg"
+        dot.render(str(svg_path.with_suffix("")), cleanup=True)
+        print(f"SVG version saved: {svg_path}")
+
+        # Clean up hooks
+        for hook in hooks:
+            hook.remove()
+    except ImportError:
+        print("torchviz not installed. Install with: pip install torchviz")
+    except Exception as e:
+        print(f"Error creating model diagram: {e}")
+        import traceback
+        traceback.print_exc()
+
+
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -107,9 +222,14 @@ def main():
         device=DEVICE,
         learning_rate=1e-3,
         checkpoint_path=str(CHECKPOINT_PATH),
+        phase_support=PHASE_SUPPORT
     )
     model.load_checkpoint()
     print(f"Loaded checkpoint from {CHECKPOINT_PATH}")
+
+    # create model architecture diagram
+    # model_diagram_path = OUTPUT_DIR / "model_architecture.png"
+    # plot_model_architecture(model, model_diagram_path, input_shape=(1, 2 if PHASE_SUPPORT else 1, 257, 256))
 
     # run multipass denoising
     waveforms_for_plot = []
