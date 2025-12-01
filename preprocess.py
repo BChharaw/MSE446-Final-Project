@@ -29,8 +29,8 @@ PRE_CFG = CONFIG["preprocess"]
 TRAIN_CFG = CONFIG["train"]   # for train/val split
 
 # Raw data locations
-RAW_SPEECH_DIR = Path(PATHS_CFG["raw_speech_dir"])
-RAW_NOISE_DIR = Path(PATHS_CFG["raw_noise_dir"])
+RAW_SPEECH_DIR = Path(PATHS_CFG["raw_speech_dir"]).expanduser()
+RAW_NOISE_DIR = Path(PATHS_CFG["raw_noise_dir"]).expanduser()
 
 # Output locations (already point to audio folders)
 OUT_TRAIN_AUDIO_DIR = Path(PATHS_CFG["processed_train_dir"])
@@ -173,7 +173,7 @@ def main():
 
     # Load all speech files to memory (you likely have only 1 long podcast to start)
     speech_waveforms: list[np.ndarray] = []
-    for p in speech_files:
+    for p in tqdm(speech_files, desc="Loading speech files"):
         w = load_wav(p, target_sr=SAMPLE_RATE)
         if len(w) > 0:
             speech_waveforms.append(w.astype(np.float32))

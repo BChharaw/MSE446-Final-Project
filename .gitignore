@@ -213,3 +213,13 @@ data_processed/
 checkpoints/
 
 wandb/*
+data/*
+
+# Large archive files
+*.tar.gz
+*.tar
+*.zip
+*.gz
+*.bz2
+*.xz
+*.7z

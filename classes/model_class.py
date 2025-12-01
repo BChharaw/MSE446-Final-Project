@@ -295,9 +295,11 @@ class SpeechDenoisingModel:
             loss = self._frequency_weighted_loss(prediction, clean)
             return loss.item(), prediction.cpu().squeeze(1).numpy()
 
-    def save_checkpoint(self):
-        self.checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-        torch.save(self.model.state_dict(), str(self.checkpoint_path))
+    def save_checkpoint(self, checkpoint_path=None):
+        if checkpoint_path is None:
+            checkpoint_path = self.checkpoint_path
+        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(self.model.state_dict(), str(checkpoint_path))
 
     def load_checkpoint(self):
         self.model.load_state_dict(torch.load(str(self.checkpoint_path), map_location=self.device))

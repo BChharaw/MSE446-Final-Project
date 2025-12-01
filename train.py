@@ -26,6 +26,7 @@ WANDB_CFG = CONFIG.get("wandb", {})
 TRAIN_AUDIO_DIR = Path(PATHS_CFG["processed_train_dir"])
 VAL_AUDIO_DIR = Path(PATHS_CFG["processed_val_dir"])
 CHECKPOINT_PATH = Path(PATHS_CFG["checkpoint_path"])
+CHECKPOINT_INTERVAL = int(TRAIN_CFG.get("checkpoint_interval", 5))  # Save checkpoint every N epochs
 
 SAMPLE_RATE = int(GLOBAL_CFG["sample_rate"])
 N_FFT = int(GLOBAL_CFG["stft"]["n_fft"])
@@ -43,7 +44,7 @@ if device_cfg == "auto":
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 else:
     DEVICE = device_cfg
-
+print(f"Using device: {DEVICE}")
 # -----------------------
 # Optional wandb setup
 # -----------------------
@@ -251,6 +252,13 @@ def main():
             model.save_checkpoint()
             print(f"New best model saved (val={best_val:.5f})")
 
+        # Save checkpoint every CHECKPOINT_INTERVAL epochs
+        if epoch % CHECKPOINT_INTERVAL == 0:
+            checkpoint_path = Path(f"checkpoints/epoch_{epoch}_loss_{val_avg:.5f}.pth")
+            checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+            model.save_checkpoint(checkpoint_path)
+            print(f"Checkpoint saved at epoch {epoch} to {checkpoint_path}")
+        
     print("\nTraining complete.")
     print(f"Best validation loss: {best_val:.5f}")
 
