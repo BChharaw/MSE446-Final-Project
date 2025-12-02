@@ -195,3 +195,20 @@ This:
 - Multipass inference helps remove residual noise.
 - No command-line arguments are needed; the JSON config controls everything.
 - For wandb, pip install wandb, login to your wandb account (in browser), copy your API key and then wandb login in terminal.
+
+## 8. Dev Container and GPU Utilization
+This repo contains a dev container with an NVIDIA CUDA image for training with NVIDIA GPUs. To set up for training on GPU follow these instructions:
+
+1. **Install Docker** and **NVIDIA Container Toolkit** on your system
+2. **Install VS Code Extension**: "Dev Containers" by Microsoft
+3. **Open in container**:
+   - Press `Ctrl+Shift+P`
+   - Select `Dev Containers: Reopen in Container`
+4. Wait for the container to build (first time only)
+
+All dependencies will be pre-installed in the container, and your local files will be mounted so changes sync automatically.
+
+That's it! Now just use the repo as normally with device selected as "auto" in the config file.
+
+**Note:** This dev container was only tested on a system with an **RTX 3090 GPU** and **CUDA 12.2**. GPU support requires the NVIDIA Container Toolkit.
+
