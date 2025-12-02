@@ -1,0 +1,57 @@
+{
+  "global": {
+    "sample_rate": 16000,
+    "stft": {
+      "n_fft": 512,
+      "hop_length": 128
+    }
+  },
+  "paths": {
+    "raw_speech_dir": "/data/LibriSpeech/train-clean-100",
+    "raw_noise_dir": "data_raw/noise",
+    "processed_train_dir": "data_processed/train/audio",
+    "processed_val_dir": "data_processed/val/audio",
+    "preprocess_vis_dir": "visualizations/preprocess/spectrograms",
+    "checkpoint_path": "checkpoints/best.pth",
+    "eval_output_dir": "evaluation/results"
+  },
+  "preprocess": {
+    "clip_seconds": 8.0,
+    "snr_range_db": [-5.0, 5.0],
+    "gain_range": [0.1, 0.5],
+    "noise_probability": 0.9,
+    "max_noise_overlays": 4,
+    "num_examples": 10000,
+    "num_vis_samples": 10,
+    "seed": 0
+  },
+  "train": {
+    "model_type": "unet",
+    "train_split": 0.9,
+    "batch_size": 16,
+    "epochs": 15,
+    "learning_rate": 0.0005,
+    "device": "auto",
+    "seed": 0,
+    "experiment_name": "RNN_exp2",
+    "phase_support": false,
+    "checkpoint_interval": 5
+  },
+  "eval": {
+    "model_type": "unet",
+    "num_passes": 2,
+    "device": "auto",
+    "sample_index": 0,
+    "phase_support": false,
+    "checkpoint_path": "checkpoints/best_Unet.pth",
+    "vis_model": false
+  },
+  "wandb": {
+    "enabled": true,
+    "project": "mse446-speech-denoiser",
+    "job_type": "train",
+    "notes": "",
+    "tags": ["RNN_exp2", "clean-100", "batch=16", "layers=2"],
+    "mode": "online"  
+  }
+}

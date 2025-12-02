@@ -1,0 +1,37 @@
+{
+  "os": "macOS-26.2-arm64-arm-64bit-Mach-O",
+  "python": "CPython 3.13.7",
+  "startedAt": "2025-11-25T02:21:41.212378Z",
+  "program": "/Users/brendanchharawala/Documents/GitHub/MSE446-Final-Project/train.py",
+  "codePath": "train.py",
+  "codePathLocal": "train.py",
+  "git": {
+    "remote": "https://github.com/BChharaw/MSE446-Final-Project.git",
+    "commit": "e26c1c03fb25cbaac63bac58c57ba384ba78c680"
+  },
+  "email": "bchharaw@uwaterloo.ca",
+  "root": "/Users/brendanchharawala/Documents/GitHub/MSE446-Final-Project",
+  "host": "Brendans-MacBook-Pro.local",
+  "executable": "/Users/brendanchharawala/Documents/GitHub/MSE446-Final-Project/venv/bin/python3",
+  "cpu_count": 10,
+  "cpu_count_logical": 10,
+  "disk": {
+    "/": {
+      "total": "494353338368",
+      "used": "338681028608"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "apple": {
+    "name": "Apple M2 Pro",
+    "ecpuCores": 4,
+    "pcpuCores": 6,
+    "gpuCores": 16,
+    "memoryGb": 16,
+    "swapTotalBytes": "3221225472",
+    "ramTotalBytes": "17179869184"
+  },
+  "writerId": "njp5igaexty11pjb515mw2ndb0jj1cnt"
+}

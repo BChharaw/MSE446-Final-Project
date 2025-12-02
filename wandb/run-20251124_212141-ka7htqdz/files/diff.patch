@@ -1,0 +1,1871 @@
+diff --git a/.gitignore b/.gitignore
+index 09be0ef..e495b05 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -205,3 +205,9 @@ cython_debug/
+ marimo/_static/
+ marimo/_lsp/
+ __marimo__/
++
++cache/
++cache*/
++legacy/
++data_processed/
++visuali
+\ No newline at end of file
+diff --git a/__pycache__/utils_audio.cpython-313.pyc b/__pycache__/utils_audio.cpython-313.pyc
+deleted file mode 100644
+index dab6e9f..0000000
+Binary files a/__pycache__/utils_audio.cpython-313.pyc and /dev/null differ
+diff --git a/cache/podcast_clip0.wav b/cache/podcast_clip0.wav
+deleted file mode 100644
+index 786e715..0000000
+Binary files a/cache/podcast_clip0.wav and /dev/null differ
+diff --git a/cache/podcast_clip1.wav b/cache/podcast_clip1.wav
+deleted file mode 100644
+index 0522975..0000000
+Binary files a/cache/podcast_clip1.wav and /dev/null differ
+diff --git a/cache/podcast_clip10.wav b/cache/podcast_clip10.wav
+deleted file mode 100644
+index 8cc05b8..0000000
+Binary files a/cache/podcast_clip10.wav and /dev/null differ
+diff --git a/cache/podcast_clip100.wav b/cache/podcast_clip100.wav
+deleted file mode 100644
+index f3a16b9..0000000
+Binary files a/cache/podcast_clip100.wav and /dev/null differ
+diff --git a/cache/podcast_clip101.wav b/cache/podcast_clip101.wav
+deleted file mode 100644
+index 5016dac..0000000
+Binary files a/cache/podcast_clip101.wav and /dev/null differ
+diff --git a/cache/podcast_clip102.wav b/cache/podcast_clip102.wav
+deleted file mode 100644
+index 30f3ff9..0000000
+Binary files a/cache/podcast_clip102.wav and /dev/null differ
+diff --git a/cache/podcast_clip103.wav b/cache/podcast_clip103.wav
+deleted file mode 100644
+index c37016e..0000000
+Binary files a/cache/podcast_clip103.wav and /dev/null differ
+diff --git a/cache/podcast_clip104.wav b/cache/podcast_clip104.wav
+deleted file mode 100644
+index 7a807b1..0000000
+Binary files a/cache/podcast_clip104.wav and /dev/null differ
+diff --git a/cache/podcast_clip105.wav b/cache/podcast_clip105.wav
+deleted file mode 100644
+index 14ddd34..0000000
+Binary files a/cache/podcast_clip105.wav and /dev/null differ
+diff --git a/cache/podcast_clip106.wav b/cache/podcast_clip106.wav
+deleted file mode 100644
+index 9ada6bd..0000000
+Binary files a/cache/podcast_clip106.wav and /dev/null differ
+diff --git a/cache/podcast_clip107.wav b/cache/podcast_clip107.wav
+deleted file mode 100644
+index 9e83369..0000000
+Binary files a/cache/podcast_clip107.wav and /dev/null differ
+diff --git a/cache/podcast_clip108.wav b/cache/podcast_clip108.wav
+deleted file mode 100644
+index 870549d..0000000
+Binary files a/cache/podcast_clip108.wav and /dev/null differ
+diff --git a/cache/podcast_clip109.wav b/cache/podcast_clip109.wav
+deleted file mode 100644
+index d142d7d..0000000
+Binary files a/cache/podcast_clip109.wav and /dev/null differ
+diff --git a/cache/podcast_clip11.wav b/cache/podcast_clip11.wav
+deleted file mode 100644
+index de8f1f2..0000000
+Binary files a/cache/podcast_clip11.wav and /dev/null differ
+diff --git a/cache/podcast_clip110.wav b/cache/podcast_clip110.wav
+deleted file mode 100644
+index 190e71d..0000000
+Binary files a/cache/podcast_clip110.wav and /dev/null differ
+diff --git a/cache/podcast_clip111.wav b/cache/podcast_clip111.wav
+deleted file mode 100644
+index 179803b..0000000
+Binary files a/cache/podcast_clip111.wav and /dev/null differ
+diff --git a/cache/podcast_clip112.wav b/cache/podcast_clip112.wav
+deleted file mode 100644
+index bc571d1..0000000
+Binary files a/cache/podcast_clip112.wav and /dev/null differ
+diff --git a/cache/podcast_clip113.wav b/cache/podcast_clip113.wav
+deleted file mode 100644
+index 74db56e..0000000
+Binary files a/cache/podcast_clip113.wav and /dev/null differ
+diff --git a/cache/podcast_clip114.wav b/cache/podcast_clip114.wav
+deleted file mode 100644
+index d8c2fd2..0000000
+Binary files a/cache/podcast_clip114.wav and /dev/null differ
+diff --git a/cache/podcast_clip115.wav b/cache/podcast_clip115.wav
+deleted file mode 100644
+index 49559f9..0000000
+Binary files a/cache/podcast_clip115.wav and /dev/null differ
+diff --git a/cache/podcast_clip116.wav b/cache/podcast_clip116.wav
+deleted file mode 100644
+index b7f2f16..0000000
+Binary files a/cache/podcast_clip116.wav and /dev/null differ
+diff --git a/cache/podcast_clip117.wav b/cache/podcast_clip117.wav
+deleted file mode 100644
+index a9ededa..0000000
+Binary files a/cache/podcast_clip117.wav and /dev/null differ
+diff --git a/cache/podcast_clip118.wav b/cache/podcast_clip118.wav
+deleted file mode 100644
+index 09622f6..0000000
+Binary files a/cache/podcast_clip118.wav and /dev/null differ
+diff --git a/cache/podcast_clip119.wav b/cache/podcast_clip119.wav
+deleted file mode 100644
+index 8af1b3c..0000000
+Binary files a/cache/podcast_clip119.wav and /dev/null differ
+diff --git a/cache/podcast_clip12.wav b/cache/podcast_clip12.wav
+deleted file mode 100644
+index acab523..0000000
+Binary files a/cache/podcast_clip12.wav and /dev/null differ
+diff --git a/cache/podcast_clip120.wav b/cache/podcast_clip120.wav
+deleted file mode 100644
+index 7457ebe..0000000
+Binary files a/cache/podcast_clip120.wav and /dev/null differ
+diff --git a/cache/podcast_clip121.wav b/cache/podcast_clip121.wav
+deleted file mode 100644
+index 38e2261..0000000
+Binary files a/cache/podcast_clip121.wav and /dev/null differ
+diff --git a/cache/podcast_clip122.wav b/cache/podcast_clip122.wav
+deleted file mode 100644
+index f554b48..0000000
+Binary files a/cache/podcast_clip122.wav and /dev/null differ
+diff --git a/cache/podcast_clip123.wav b/cache/podcast_clip123.wav
+deleted file mode 100644
+index 9de6e32..0000000
+Binary files a/cache/podcast_clip123.wav and /dev/null differ
+diff --git a/cache/podcast_clip124.wav b/cache/podcast_clip124.wav
+deleted file mode 100644
+index c7571f2..0000000
+Binary files a/cache/podcast_clip124.wav and /dev/null differ
+diff --git a/cache/podcast_clip125.wav b/cache/podcast_clip125.wav
+deleted file mode 100644
+index 4d562ab..0000000
+Binary files a/cache/podcast_clip125.wav and /dev/null differ
+diff --git a/cache/podcast_clip126.wav b/cache/podcast_clip126.wav
+deleted file mode 100644
+index d8f8b0b..0000000
+Binary files a/cache/podcast_clip126.wav and /dev/null differ
+diff --git a/cache/podcast_clip127.wav b/cache/podcast_clip127.wav
+deleted file mode 100644
+index 0d92d1b..0000000
+Binary files a/cache/podcast_clip127.wav and /dev/null differ
+diff --git a/cache/podcast_clip128.wav b/cache/podcast_clip128.wav
+deleted file mode 100644
+index 31d0edd..0000000
+Binary files a/cache/podcast_clip128.wav and /dev/null differ
+diff --git a/cache/podcast_clip129.wav b/cache/podcast_clip129.wav
+deleted file mode 100644
+index 92d6316..0000000
+Binary files a/cache/podcast_clip129.wav and /dev/null differ
+diff --git a/cache/podcast_clip13.wav b/cache/podcast_clip13.wav
+deleted file mode 100644
+index 6e3eb59..0000000
+Binary files a/cache/podcast_clip13.wav and /dev/null differ
+diff --git a/cache/podcast_clip130.wav b/cache/podcast_clip130.wav
+deleted file mode 100644
+index 7db65c4..0000000
+Binary files a/cache/podcast_clip130.wav and /dev/null differ
+diff --git a/cache/podcast_clip131.wav b/cache/podcast_clip131.wav
+deleted file mode 100644
+index 1d5a0a9..0000000
+Binary files a/cache/podcast_clip131.wav and /dev/null differ
+diff --git a/cache/podcast_clip132.wav b/cache/podcast_clip132.wav
+deleted file mode 100644
+index 9f4b0c6..0000000
+Binary files a/cache/podcast_clip132.wav and /dev/null differ
+diff --git a/cache/podcast_clip133.wav b/cache/podcast_clip133.wav
+deleted file mode 100644
+index f2193f5..0000000
+Binary files a/cache/podcast_clip133.wav and /dev/null differ
+diff --git a/cache/podcast_clip134.wav b/cache/podcast_clip134.wav
+deleted file mode 100644
+index dbfd2d7..0000000
+Binary files a/cache/podcast_clip134.wav and /dev/null differ
+diff --git a/cache/podcast_clip135.wav b/cache/podcast_clip135.wav
+deleted file mode 100644
+index 9308423..0000000
+Binary files a/cache/podcast_clip135.wav and /dev/null differ
+diff --git a/cache/podcast_clip136.wav b/cache/podcast_clip136.wav
+deleted file mode 100644
+index 3ec9342..0000000
+Binary files a/cache/podcast_clip136.wav and /dev/null differ
+diff --git a/cache/podcast_clip137.wav b/cache/podcast_clip137.wav
+deleted file mode 100644
+index 692f938..0000000
+Binary files a/cache/podcast_clip137.wav and /dev/null differ
+diff --git a/cache/podcast_clip138.wav b/cache/podcast_clip138.wav
+deleted file mode 100644
+index 11e48f4..0000000
+Binary files a/cache/podcast_clip138.wav and /dev/null differ
+diff --git a/cache/podcast_clip139.wav b/cache/podcast_clip139.wav
+deleted file mode 100644
+index 0152764..0000000
+Binary files a/cache/podcast_clip139.wav and /dev/null differ
+diff --git a/cache/podcast_clip14.wav b/cache/podcast_clip14.wav
+deleted file mode 100644
+index bd44be0..0000000
+Binary files a/cache/podcast_clip14.wav and /dev/null differ
+diff --git a/cache/podcast_clip140.wav b/cache/podcast_clip140.wav
+deleted file mode 100644
+index 9668b5a..0000000
+Binary files a/cache/podcast_clip140.wav and /dev/null differ
+diff --git a/cache/podcast_clip141.wav b/cache/podcast_clip141.wav
+deleted file mode 100644
+index 25e7426..0000000
+Binary files a/cache/podcast_clip141.wav and /dev/null differ
+diff --git a/cache/podcast_clip142.wav b/cache/podcast_clip142.wav
+deleted file mode 100644
+index b2c8ec6..0000000
+Binary files a/cache/podcast_clip142.wav and /dev/null differ
+diff --git a/cache/podcast_clip143.wav b/cache/podcast_clip143.wav
+deleted file mode 100644
+index a4b6440..0000000
+Binary files a/cache/podcast_clip143.wav and /dev/null differ
+diff --git a/cache/podcast_clip144.wav b/cache/podcast_clip144.wav
+deleted file mode 100644
+index d341777..0000000
+Binary files a/cache/podcast_clip144.wav and /dev/null differ
+diff --git a/cache/podcast_clip145.wav b/cache/podcast_clip145.wav
+deleted file mode 100644
+index 3d1ca87..0000000
+Binary files a/cache/podcast_clip145.wav and /dev/null differ
+diff --git a/cache/podcast_clip146.wav b/cache/podcast_clip146.wav
+deleted file mode 100644
+index 7cfb8f8..0000000
+Binary files a/cache/podcast_clip146.wav and /dev/null differ
+diff --git a/cache/podcast_clip147.wav b/cache/podcast_clip147.wav
+deleted file mode 100644
+index f25c44e..0000000
+Binary files a/cache/podcast_clip147.wav and /dev/null differ
+diff --git a/cache/podcast_clip148.wav b/cache/podcast_clip148.wav
+deleted file mode 100644
+index a067b12..0000000
+Binary files a/cache/podcast_clip148.wav and /dev/null differ
+diff --git a/cache/podcast_clip149.wav b/cache/podcast_clip149.wav
+deleted file mode 100644
+index cb9ef88..0000000
+Binary files a/cache/podcast_clip149.wav and /dev/null differ
+diff --git a/cache/podcast_clip15.wav b/cache/podcast_clip15.wav
+deleted file mode 100644
+index 794823c..0000000
+Binary files a/cache/podcast_clip15.wav and /dev/null differ
+diff --git a/cache/podcast_clip150.wav b/cache/podcast_clip150.wav
+deleted file mode 100644
+index 3398683..0000000
+Binary files a/cache/podcast_clip150.wav and /dev/null differ
+diff --git a/cache/podcast_clip151.wav b/cache/podcast_clip151.wav
+deleted file mode 100644
+index fedfbdd..0000000
+Binary files a/cache/podcast_clip151.wav and /dev/null differ
+diff --git a/cache/podcast_clip152.wav b/cache/podcast_clip152.wav
+deleted file mode 100644
+index e5954e8..0000000
+Binary files a/cache/podcast_clip152.wav and /dev/null differ
+diff --git a/cache/podcast_clip153.wav b/cache/podcast_clip153.wav
+deleted file mode 100644
+index c393b6e..0000000
+Binary files a/cache/podcast_clip153.wav and /dev/null differ
+diff --git a/cache/podcast_clip154.wav b/cache/podcast_clip154.wav
+deleted file mode 100644
+index d79d548..0000000
+Binary files a/cache/podcast_clip154.wav and /dev/null differ
+diff --git a/cache/podcast_clip155.wav b/cache/podcast_clip155.wav
+deleted file mode 100644
+index b214830..0000000
+Binary files a/cache/podcast_clip155.wav and /dev/null differ
+diff --git a/cache/podcast_clip156.wav b/cache/podcast_clip156.wav
+deleted file mode 100644
+index 798dbdd..0000000
+Binary files a/cache/podcast_clip156.wav and /dev/null differ
+diff --git a/cache/podcast_clip157.wav b/cache/podcast_clip157.wav
+deleted file mode 100644
+index 15a87e4..0000000
+Binary files a/cache/podcast_clip157.wav and /dev/null differ
+diff --git a/cache/podcast_clip158.wav b/cache/podcast_clip158.wav
+deleted file mode 100644
+index 457fcd2..0000000
+Binary files a/cache/podcast_clip158.wav and /dev/null differ
+diff --git a/cache/podcast_clip159.wav b/cache/podcast_clip159.wav
+deleted file mode 100644
+index a2d6c0e..0000000
+Binary files a/cache/podcast_clip159.wav and /dev/null differ
+diff --git a/cache/podcast_clip16.wav b/cache/podcast_clip16.wav
+deleted file mode 100644
+index 92fcd26..0000000
+Binary files a/cache/podcast_clip16.wav and /dev/null differ
+diff --git a/cache/podcast_clip160.wav b/cache/podcast_clip160.wav
+deleted file mode 100644
+index 19b1e30..0000000
+Binary files a/cache/podcast_clip160.wav and /dev/null differ
+diff --git a/cache/podcast_clip161.wav b/cache/podcast_clip161.wav
+deleted file mode 100644
+index 80cd86a..0000000
+Binary files a/cache/podcast_clip161.wav and /dev/null differ
+diff --git a/cache/podcast_clip162.wav b/cache/podcast_clip162.wav
+deleted file mode 100644
+index a292a18..0000000
+Binary files a/cache/podcast_clip162.wav and /dev/null differ
+diff --git a/cache/podcast_clip163.wav b/cache/podcast_clip163.wav
+deleted file mode 100644
+index 473a9f8..0000000
+Binary files a/cache/podcast_clip163.wav and /dev/null differ
+diff --git a/cache/podcast_clip164.wav b/cache/podcast_clip164.wav
+deleted file mode 100644
+index 9bc1d25..0000000
+Binary files a/cache/podcast_clip164.wav and /dev/null differ
+diff --git a/cache/podcast_clip165.wav b/cache/podcast_clip165.wav
+deleted file mode 100644
+index af30fb5..0000000
+Binary files a/cache/podcast_clip165.wav and /dev/null differ
+diff --git a/cache/podcast_clip166.wav b/cache/podcast_clip166.wav
+deleted file mode 100644
+index fb4a7e9..0000000
+Binary files a/cache/podcast_clip166.wav and /dev/null differ
+diff --git a/cache/podcast_clip167.wav b/cache/podcast_clip167.wav
+deleted file mode 100644
+index 6c3c02d..0000000
+Binary files a/cache/podcast_clip167.wav and /dev/null differ
+diff --git a/cache/podcast_clip168.wav b/cache/podcast_clip168.wav
+deleted file mode 100644
+index dc69fa9..0000000
+Binary files a/cache/podcast_clip168.wav and /dev/null differ
+diff --git a/cache/podcast_clip169.wav b/cache/podcast_clip169.wav
+deleted file mode 100644
+index cbe0a49..0000000
+Binary files a/cache/podcast_clip169.wav and /dev/null differ
+diff --git a/cache/podcast_clip17.wav b/cache/podcast_clip17.wav
+deleted file mode 100644
+index 6b0e9d7..0000000
+Binary files a/cache/podcast_clip17.wav and /dev/null differ
+diff --git a/cache/podcast_clip170.wav b/cache/podcast_clip170.wav
+deleted file mode 100644
+index 9a02b9d..0000000
+Binary files a/cache/podcast_clip170.wav and /dev/null differ
+diff --git a/cache/podcast_clip171.wav b/cache/podcast_clip171.wav
+deleted file mode 100644
+index 6e72211..0000000
+Binary files a/cache/podcast_clip171.wav and /dev/null differ
+diff --git a/cache/podcast_clip172.wav b/cache/podcast_clip172.wav
+deleted file mode 100644
+index 24e319f..0000000
+Binary files a/cache/podcast_clip172.wav and /dev/null differ
+diff --git a/cache/podcast_clip173.wav b/cache/podcast_clip173.wav
+deleted file mode 100644
+index 1497c64..0000000
+Binary files a/cache/podcast_clip173.wav and /dev/null differ
+diff --git a/cache/podcast_clip174.wav b/cache/podcast_clip174.wav
+deleted file mode 100644
+index c47025c..0000000
+Binary files a/cache/podcast_clip174.wav and /dev/null differ
+diff --git a/cache/podcast_clip175.wav b/cache/podcast_clip175.wav
+deleted file mode 100644
+index b924740..0000000
+Binary files a/cache/podcast_clip175.wav and /dev/null differ
+diff --git a/cache/podcast_clip176.wav b/cache/podcast_clip176.wav
+deleted file mode 100644
+index 13a326e..0000000
+Binary files a/cache/podcast_clip176.wav and /dev/null differ
+diff --git a/cache/podcast_clip177.wav b/cache/podcast_clip177.wav
+deleted file mode 100644
+index 3763ec9..0000000
+Binary files a/cache/podcast_clip177.wav and /dev/null differ
+diff --git a/cache/podcast_clip178.wav b/cache/podcast_clip178.wav
+deleted file mode 100644
+index 45d9c32..0000000
+Binary files a/cache/podcast_clip178.wav and /dev/null differ
+diff --git a/cache/podcast_clip179.wav b/cache/podcast_clip179.wav
+deleted file mode 100644
+index ede0e23..0000000
+Binary files a/cache/podcast_clip179.wav and /dev/null differ
+diff --git a/cache/podcast_clip18.wav b/cache/podcast_clip18.wav
+deleted file mode 100644
+index fd367d0..0000000
+Binary files a/cache/podcast_clip18.wav and /dev/null differ
+diff --git a/cache/podcast_clip180.wav b/cache/podcast_clip180.wav
+deleted file mode 100644
+index cef2401..0000000
+Binary files a/cache/podcast_clip180.wav and /dev/null differ
+diff --git a/cache/podcast_clip181.wav b/cache/podcast_clip181.wav
+deleted file mode 100644
+index ed14165..0000000
+Binary files a/cache/podcast_clip181.wav and /dev/null differ
+diff --git a/cache/podcast_clip182.wav b/cache/podcast_clip182.wav
+deleted file mode 100644
+index c185714..0000000
+Binary files a/cache/podcast_clip182.wav and /dev/null differ
+diff --git a/cache/podcast_clip183.wav b/cache/podcast_clip183.wav
+deleted file mode 100644
+index b213e5e..0000000
+Binary files a/cache/podcast_clip183.wav and /dev/null differ
+diff --git a/cache/podcast_clip184.wav b/cache/podcast_clip184.wav
+deleted file mode 100644
+index 80dc071..0000000
+Binary files a/cache/podcast_clip184.wav and /dev/null differ
+diff --git a/cache/podcast_clip185.wav b/cache/podcast_clip185.wav
+deleted file mode 100644
+index 58f23e5..0000000
+Binary files a/cache/podcast_clip185.wav and /dev/null differ
+diff --git a/cache/podcast_clip186.wav b/cache/podcast_clip186.wav
+deleted file mode 100644
+index 743b9d0..0000000
+Binary files a/cache/podcast_clip186.wav and /dev/null differ
+diff --git a/cache/podcast_clip187.wav b/cache/podcast_clip187.wav
+deleted file mode 100644
+index 7533331..0000000
+Binary files a/cache/podcast_clip187.wav and /dev/null differ
+diff --git a/cache/podcast_clip188.wav b/cache/podcast_clip188.wav
+deleted file mode 100644
+index 2ba1635..0000000
+Binary files a/cache/podcast_clip188.wav and /dev/null differ
+diff --git a/cache/podcast_clip189.wav b/cache/podcast_clip189.wav
+deleted file mode 100644
+index 9fcf861..0000000
+Binary files a/cache/podcast_clip189.wav and /dev/null differ
+diff --git a/cache/podcast_clip19.wav b/cache/podcast_clip19.wav
+deleted file mode 100644
+index c38ba49..0000000
+Binary files a/cache/podcast_clip19.wav and /dev/null differ
+diff --git a/cache/podcast_clip190.wav b/cache/podcast_clip190.wav
+deleted file mode 100644
+index 4e07f8a..0000000
+Binary files a/cache/podcast_clip190.wav and /dev/null differ
+diff --git a/cache/podcast_clip191.wav b/cache/podcast_clip191.wav
+deleted file mode 100644
+index d0a98a7..0000000
+Binary files a/cache/podcast_clip191.wav and /dev/null differ
+diff --git a/cache/podcast_clip192.wav b/cache/podcast_clip192.wav
+deleted file mode 100644
+index df3d7fb..0000000
+Binary files a/cache/podcast_clip192.wav and /dev/null differ
+diff --git a/cache/podcast_clip193.wav b/cache/podcast_clip193.wav
+deleted file mode 100644
+index 67b0be3..0000000
+Binary files a/cache/podcast_clip193.wav and /dev/null differ
+diff --git a/cache/podcast_clip194.wav b/cache/podcast_clip194.wav
+deleted file mode 100644
+index d4fa32b..0000000
+Binary files a/cache/podcast_clip194.wav and /dev/null differ
+diff --git a/cache/podcast_clip195.wav b/cache/podcast_clip195.wav
+deleted file mode 100644
+index dec2414..0000000
+Binary files a/cache/podcast_clip195.wav and /dev/null differ
+diff --git a/cache/podcast_clip196.wav b/cache/podcast_clip196.wav
+deleted file mode 100644
+index 16e2ed7..0000000
+Binary files a/cache/podcast_clip196.wav and /dev/null differ
+diff --git a/cache/podcast_clip197.wav b/cache/podcast_clip197.wav
+deleted file mode 100644
+index eb45f5b..0000000
+Binary files a/cache/podcast_clip197.wav and /dev/null differ
+diff --git a/cache/podcast_clip198.wav b/cache/podcast_clip198.wav
+deleted file mode 100644
+index 9127861..0000000
+Binary files a/cache/podcast_clip198.wav and /dev/null differ
+diff --git a/cache/podcast_clip199.wav b/cache/podcast_clip199.wav
+deleted file mode 100644
+index 05c5f53..0000000
+Binary files a/cache/podcast_clip199.wav and /dev/null differ
+diff --git a/cache/podcast_clip2.wav b/cache/podcast_clip2.wav
+deleted file mode 100644
+index e83cdf7..0000000
+Binary files a/cache/podcast_clip2.wav and /dev/null differ
+diff --git a/cache/podcast_clip20.wav b/cache/podcast_clip20.wav
+deleted file mode 100644
+index f69cc2a..0000000
+Binary files a/cache/podcast_clip20.wav and /dev/null differ
+diff --git a/cache/podcast_clip21.wav b/cache/podcast_clip21.wav
+deleted file mode 100644
+index 309a8f9..0000000
+Binary files a/cache/podcast_clip21.wav and /dev/null differ
+diff --git a/cache/podcast_clip22.wav b/cache/podcast_clip22.wav
+deleted file mode 100644
+index ab46e6a..0000000
+Binary files a/cache/podcast_clip22.wav and /dev/null differ
+diff --git a/cache/podcast_clip23.wav b/cache/podcast_clip23.wav
+deleted file mode 100644
+index a12c836..0000000
+Binary files a/cache/podcast_clip23.wav and /dev/null differ
+diff --git a/cache/podcast_clip24.wav b/cache/podcast_clip24.wav
+deleted file mode 100644
+index 1f28847..0000000
+Binary files a/cache/podcast_clip24.wav and /dev/null differ
+diff --git a/cache/podcast_clip25.wav b/cache/podcast_clip25.wav
+deleted file mode 100644
+index f4b69d6..0000000
+Binary files a/cache/podcast_clip25.wav and /dev/null differ
+diff --git a/cache/podcast_clip26.wav b/cache/podcast_clip26.wav
+deleted file mode 100644
+index 1b6bdcb..0000000
+Binary files a/cache/podcast_clip26.wav and /dev/null differ
+diff --git a/cache/podcast_clip27.wav b/cache/podcast_clip27.wav
+deleted file mode 100644
+index b72aea9..0000000
+Binary files a/cache/podcast_clip27.wav and /dev/null differ
+diff --git a/cache/podcast_clip28.wav b/cache/podcast_clip28.wav
+deleted file mode 100644
+index 0a5ad35..0000000
+Binary files a/cache/podcast_clip28.wav and /dev/null differ
+diff --git a/cache/podcast_clip29.wav b/cache/podcast_clip29.wav
+deleted file mode 100644
+index 8ce3e20..0000000
+Binary files a/cache/podcast_clip29.wav and /dev/null differ
+diff --git a/cache/podcast_clip3.wav b/cache/podcast_clip3.wav
+deleted file mode 100644
+index 7cc5a11..0000000
+Binary files a/cache/podcast_clip3.wav and /dev/null differ
+diff --git a/cache/podcast_clip30.wav b/cache/podcast_clip30.wav
+deleted file mode 100644
+index a5f0cfe..0000000
+Binary files a/cache/podcast_clip30.wav and /dev/null differ
+diff --git a/cache/podcast_clip31.wav b/cache/podcast_clip31.wav
+deleted file mode 100644
+index 1896be4..0000000
+Binary files a/cache/podcast_clip31.wav and /dev/null differ
+diff --git a/cache/podcast_clip32.wav b/cache/podcast_clip32.wav
+deleted file mode 100644
+index a4a8e5a..0000000
+Binary files a/cache/podcast_clip32.wav and /dev/null differ
+diff --git a/cache/podcast_clip33.wav b/cache/podcast_clip33.wav
+deleted file mode 100644
+index f942675..0000000
+Binary files a/cache/podcast_clip33.wav and /dev/null differ
+diff --git a/cache/podcast_clip34.wav b/cache/podcast_clip34.wav
+deleted file mode 100644
+index 4e90bf8..0000000
+Binary files a/cache/podcast_clip34.wav and /dev/null differ
+diff --git a/cache/podcast_clip35.wav b/cache/podcast_clip35.wav
+deleted file mode 100644
+index d5bf3b1..0000000
+Binary files a/cache/podcast_clip35.wav and /dev/null differ
+diff --git a/cache/podcast_clip36.wav b/cache/podcast_clip36.wav
+deleted file mode 100644
+index 00b668e..0000000
+Binary files a/cache/podcast_clip36.wav and /dev/null differ
+diff --git a/cache/podcast_clip37.wav b/cache/podcast_clip37.wav
+deleted file mode 100644
+index 06621c7..0000000
+Binary files a/cache/podcast_clip37.wav and /dev/null differ
+diff --git a/cache/podcast_clip38.wav b/cache/podcast_clip38.wav
+deleted file mode 100644
+index 9c672e5..0000000
+Binary files a/cache/podcast_clip38.wav and /dev/null differ
+diff --git a/cache/podcast_clip39.wav b/cache/podcast_clip39.wav
+deleted file mode 100644
+index 09fd58a..0000000
+Binary files a/cache/podcast_clip39.wav and /dev/null differ
+diff --git a/cache/podcast_clip4.wav b/cache/podcast_clip4.wav
+deleted file mode 100644
+index 3cbb681..0000000
+Binary files a/cache/podcast_clip4.wav and /dev/null differ
+diff --git a/cache/podcast_clip40.wav b/cache/podcast_clip40.wav
+deleted file mode 100644
+index 3fc335c..0000000
+Binary files a/cache/podcast_clip40.wav and /dev/null differ
+diff --git a/cache/podcast_clip41.wav b/cache/podcast_clip41.wav
+deleted file mode 100644
+index 8b9eb10..0000000
+Binary files a/cache/podcast_clip41.wav and /dev/null differ
+diff --git a/cache/podcast_clip42.wav b/cache/podcast_clip42.wav
+deleted file mode 100644
+index c6cc8b7..0000000
+Binary files a/cache/podcast_clip42.wav and /dev/null differ
+diff --git a/cache/podcast_clip43.wav b/cache/podcast_clip43.wav
+deleted file mode 100644
+index 3e67c6a..0000000
+Binary files a/cache/podcast_clip43.wav and /dev/null differ
+diff --git a/cache/podcast_clip44.wav b/cache/podcast_clip44.wav
+deleted file mode 100644
+index 0aac577..0000000
+Binary files a/cache/podcast_clip44.wav and /dev/null differ
+diff --git a/cache/podcast_clip45.wav b/cache/podcast_clip45.wav
+deleted file mode 100644
+index 32c20cf..0000000
+Binary files a/cache/podcast_clip45.wav and /dev/null differ
+diff --git a/cache/podcast_clip46.wav b/cache/podcast_clip46.wav
+deleted file mode 100644
+index 3911de5..0000000
+Binary files a/cache/podcast_clip46.wav and /dev/null differ
+diff --git a/cache/podcast_clip47.wav b/cache/podcast_clip47.wav
+deleted file mode 100644
+index f01388a..0000000
+Binary files a/cache/podcast_clip47.wav and /dev/null differ
+diff --git a/cache/podcast_clip48.wav b/cache/podcast_clip48.wav
+deleted file mode 100644
+index aa8d873..0000000
+Binary files a/cache/podcast_clip48.wav and /dev/null differ
+diff --git a/cache/podcast_clip49.wav b/cache/podcast_clip49.wav
+deleted file mode 100644
+index 8440fa0..0000000
+Binary files a/cache/podcast_clip49.wav and /dev/null differ
+diff --git a/cache/podcast_clip5.wav b/cache/podcast_clip5.wav
+deleted file mode 100644
+index 423e3a3..0000000
+Binary files a/cache/podcast_clip5.wav and /dev/null differ
+diff --git a/cache/podcast_clip50.wav b/cache/podcast_clip50.wav
+deleted file mode 100644
+index 1fc5c5e..0000000
+Binary files a/cache/podcast_clip50.wav and /dev/null differ
+diff --git a/cache/podcast_clip51.wav b/cache/podcast_clip51.wav
+deleted file mode 100644
+index 54ee2cf..0000000
+Binary files a/cache/podcast_clip51.wav and /dev/null differ
+diff --git a/cache/podcast_clip52.wav b/cache/podcast_clip52.wav
+deleted file mode 100644
+index 6a7751f..0000000
+Binary files a/cache/podcast_clip52.wav and /dev/null differ
+diff --git a/cache/podcast_clip53.wav b/cache/podcast_clip53.wav
+deleted file mode 100644
+index 9f92833..0000000
+Binary files a/cache/podcast_clip53.wav and /dev/null differ
+diff --git a/cache/podcast_clip54.wav b/cache/podcast_clip54.wav
+deleted file mode 100644
+index fa3242f..0000000
+Binary files a/cache/podcast_clip54.wav and /dev/null differ
+diff --git a/cache/podcast_clip55.wav b/cache/podcast_clip55.wav
+deleted file mode 100644
+index acca460..0000000
+Binary files a/cache/podcast_clip55.wav and /dev/null differ
+diff --git a/cache/podcast_clip56.wav b/cache/podcast_clip56.wav
+deleted file mode 100644
+index f7982aa..0000000
+Binary files a/cache/podcast_clip56.wav and /dev/null differ
+diff --git a/cache/podcast_clip57.wav b/cache/podcast_clip57.wav
+deleted file mode 100644
+index 3fbc663..0000000
+Binary files a/cache/podcast_clip57.wav and /dev/null differ
+diff --git a/cache/podcast_clip58.wav b/cache/podcast_clip58.wav
+deleted file mode 100644
+index ff79aa3..0000000
+Binary files a/cache/podcast_clip58.wav and /dev/null differ
+diff --git a/cache/podcast_clip59.wav b/cache/podcast_clip59.wav
+deleted file mode 100644
+index 1c8584d..0000000
+Binary files a/cache/podcast_clip59.wav and /dev/null differ
+diff --git a/cache/podcast_clip6.wav b/cache/podcast_clip6.wav
+deleted file mode 100644
+index 353331c..0000000
+Binary files a/cache/podcast_clip6.wav and /dev/null differ
+diff --git a/cache/podcast_clip60.wav b/cache/podcast_clip60.wav
+deleted file mode 100644
+index b91d497..0000000
+Binary files a/cache/podcast_clip60.wav and /dev/null differ
+diff --git a/cache/podcast_clip61.wav b/cache/podcast_clip61.wav
+deleted file mode 100644
+index b0c79ad..0000000
+Binary files a/cache/podcast_clip61.wav and /dev/null differ
+diff --git a/cache/podcast_clip62.wav b/cache/podcast_clip62.wav
+deleted file mode 100644
+index b7e4a04..0000000
+Binary files a/cache/podcast_clip62.wav and /dev/null differ
+diff --git a/cache/podcast_clip63.wav b/cache/podcast_clip63.wav
+deleted file mode 100644
+index f2519bd..0000000
+Binary files a/cache/podcast_clip63.wav and /dev/null differ
+diff --git a/cache/podcast_clip64.wav b/cache/podcast_clip64.wav
+deleted file mode 100644
+index a16034a..0000000
+Binary files a/cache/podcast_clip64.wav and /dev/null differ
+diff --git a/cache/podcast_clip65.wav b/cache/podcast_clip65.wav
+deleted file mode 100644
+index 8289a71..0000000
+Binary files a/cache/podcast_clip65.wav and /dev/null differ
+diff --git a/cache/podcast_clip66.wav b/cache/podcast_clip66.wav
+deleted file mode 100644
+index f269966..0000000
+Binary files a/cache/podcast_clip66.wav and /dev/null differ
+diff --git a/cache/podcast_clip67.wav b/cache/podcast_clip67.wav
+deleted file mode 100644
+index 8392d71..0000000
+Binary files a/cache/podcast_clip67.wav and /dev/null differ
+diff --git a/cache/podcast_clip68.wav b/cache/podcast_clip68.wav
+deleted file mode 100644
+index afe0282..0000000
+Binary files a/cache/podcast_clip68.wav and /dev/null differ
+diff --git a/cache/podcast_clip69.wav b/cache/podcast_clip69.wav
+deleted file mode 100644
+index d95927b..0000000
+Binary files a/cache/podcast_clip69.wav and /dev/null differ
+diff --git a/cache/podcast_clip7.wav b/cache/podcast_clip7.wav
+deleted file mode 100644
+index 4c6682e..0000000
+Binary files a/cache/podcast_clip7.wav and /dev/null differ
+diff --git a/cache/podcast_clip70.wav b/cache/podcast_clip70.wav
+deleted file mode 100644
+index 25e3176..0000000
+Binary files a/cache/podcast_clip70.wav and /dev/null differ
+diff --git a/cache/podcast_clip71.wav b/cache/podcast_clip71.wav
+deleted file mode 100644
+index d0cc6b3..0000000
+Binary files a/cache/podcast_clip71.wav and /dev/null differ
+diff --git a/cache/podcast_clip72.wav b/cache/podcast_clip72.wav
+deleted file mode 100644
+index 889f71b..0000000
+Binary files a/cache/podcast_clip72.wav and /dev/null differ
+diff --git a/cache/podcast_clip73.wav b/cache/podcast_clip73.wav
+deleted file mode 100644
+index ac4b544..0000000
+Binary files a/cache/podcast_clip73.wav and /dev/null differ
+diff --git a/cache/podcast_clip74.wav b/cache/podcast_clip74.wav
+deleted file mode 100644
+index 85b187e..0000000
+Binary files a/cache/podcast_clip74.wav and /dev/null differ
+diff --git a/cache/podcast_clip75.wav b/cache/podcast_clip75.wav
+deleted file mode 100644
+index e7cf8fe..0000000
+Binary files a/cache/podcast_clip75.wav and /dev/null differ
+diff --git a/cache/podcast_clip76.wav b/cache/podcast_clip76.wav
+deleted file mode 100644
+index 8150396..0000000
+Binary files a/cache/podcast_clip76.wav and /dev/null differ
+diff --git a/cache/podcast_clip77.wav b/cache/podcast_clip77.wav
+deleted file mode 100644
+index f261a6e..0000000
+Binary files a/cache/podcast_clip77.wav and /dev/null differ
+diff --git a/cache/podcast_clip78.wav b/cache/podcast_clip78.wav
+deleted file mode 100644
+index d95e350..0000000
+Binary files a/cache/podcast_clip78.wav and /dev/null differ
+diff --git a/cache/podcast_clip79.wav b/cache/podcast_clip79.wav
+deleted file mode 100644
+index cf9b628..0000000
+Binary files a/cache/podcast_clip79.wav and /dev/null differ
+diff --git a/cache/podcast_clip8.wav b/cache/podcast_clip8.wav
+deleted file mode 100644
+index 7f620fa..0000000
+Binary files a/cache/podcast_clip8.wav and /dev/null differ
+diff --git a/cache/podcast_clip80.wav b/cache/podcast_clip80.wav
+deleted file mode 100644
+index 7dce6c5..0000000
+Binary files a/cache/podcast_clip80.wav and /dev/null differ
+diff --git a/cache/podcast_clip81.wav b/cache/podcast_clip81.wav
+deleted file mode 100644
+index 7f1d482..0000000
+Binary files a/cache/podcast_clip81.wav and /dev/null differ
+diff --git a/cache/podcast_clip82.wav b/cache/podcast_clip82.wav
+deleted file mode 100644
+index c7abe53..0000000
+Binary files a/cache/podcast_clip82.wav and /dev/null differ
+diff --git a/cache/podcast_clip83.wav b/cache/podcast_clip83.wav
+deleted file mode 100644
+index 744a3f5..0000000
+Binary files a/cache/podcast_clip83.wav and /dev/null differ
+diff --git a/cache/podcast_clip84.wav b/cache/podcast_clip84.wav
+deleted file mode 100644
+index e6c5a47..0000000
+Binary files a/cache/podcast_clip84.wav and /dev/null differ
+diff --git a/cache/podcast_clip85.wav b/cache/podcast_clip85.wav
+deleted file mode 100644
+index 6e68915..0000000
+Binary files a/cache/podcast_clip85.wav and /dev/null differ
+diff --git a/cache/podcast_clip86.wav b/cache/podcast_clip86.wav
+deleted file mode 100644
+index eb725cf..0000000
+Binary files a/cache/podcast_clip86.wav and /dev/null differ
+diff --git a/cache/podcast_clip87.wav b/cache/podcast_clip87.wav
+deleted file mode 100644
+index 6911a7b..0000000
+Binary files a/cache/podcast_clip87.wav and /dev/null differ
+diff --git a/cache/podcast_clip88.wav b/cache/podcast_clip88.wav
+deleted file mode 100644
+index aba4dff..0000000
+Binary files a/cache/podcast_clip88.wav and /dev/null differ
+diff --git a/cache/podcast_clip89.wav b/cache/podcast_clip89.wav
+deleted file mode 100644
+index f07412a..0000000
+Binary files a/cache/podcast_clip89.wav and /dev/null differ
+diff --git a/cache/podcast_clip9.wav b/cache/podcast_clip9.wav
+deleted file mode 100644
+index 771d77e..0000000
+Binary files a/cache/podcast_clip9.wav and /dev/null differ
+diff --git a/cache/podcast_clip90.wav b/cache/podcast_clip90.wav
+deleted file mode 100644
+index 42b9283..0000000
+Binary files a/cache/podcast_clip90.wav and /dev/null differ
+diff --git a/cache/podcast_clip91.wav b/cache/podcast_clip91.wav
+deleted file mode 100644
+index 618fb93..0000000
+Binary files a/cache/podcast_clip91.wav and /dev/null differ
+diff --git a/cache/podcast_clip92.wav b/cache/podcast_clip92.wav
+deleted file mode 100644
+index e503a9d..0000000
+Binary files a/cache/podcast_clip92.wav and /dev/null differ
+diff --git a/cache/podcast_clip93.wav b/cache/podcast_clip93.wav
+deleted file mode 100644
+index c66f723..0000000
+Binary files a/cache/podcast_clip93.wav and /dev/null differ
+diff --git a/cache/podcast_clip94.wav b/cache/podcast_clip94.wav
+deleted file mode 100644
+index a4748b2..0000000
+Binary files a/cache/podcast_clip94.wav and /dev/null differ
+diff --git a/cache/podcast_clip95.wav b/cache/podcast_clip95.wav
+deleted file mode 100644
+index 035fe55..0000000
+Binary files a/cache/podcast_clip95.wav and /dev/null differ
+diff --git a/cache/podcast_clip96.wav b/cache/podcast_clip96.wav
+deleted file mode 100644
+index 81394f0..0000000
+Binary files a/cache/podcast_clip96.wav and /dev/null differ
+diff --git a/cache/podcast_clip97.wav b/cache/podcast_clip97.wav
+deleted file mode 100644
+index 7b717f2..0000000
+Binary files a/cache/podcast_clip97.wav and /dev/null differ
+diff --git a/cache/podcast_clip98.wav b/cache/podcast_clip98.wav
+deleted file mode 100644
+index df499de..0000000
+Binary files a/cache/podcast_clip98.wav and /dev/null differ
+diff --git a/cache/podcast_clip99.wav b/cache/podcast_clip99.wav
+deleted file mode 100644
+index 4ec314f..0000000
+Binary files a/cache/podcast_clip99.wav and /dev/null differ
+diff --git a/__pycache__/datasets_manipulation.cpython-313.pyc b/classes/__pycache__/datasets_manipulation.cpython-313.pyc
+similarity index 70%
+rename from __pycache__/datasets_manipulation.cpython-313.pyc
+rename to classes/__pycache__/datasets_manipulation.cpython-313.pyc
+index a65a27b..f3da0d1 100644
+Binary files a/__pycache__/datasets_manipulation.cpython-313.pyc and b/classes/__pycache__/datasets_manipulation.cpython-313.pyc differ
+diff --git a/__pycache__/model_class.cpython-313.pyc b/classes/__pycache__/model_class.cpython-313.pyc
+similarity index 57%
+rename from __pycache__/model_class.cpython-313.pyc
+rename to classes/__pycache__/model_class.cpython-313.pyc
+index 30ad63a..bbfdb78 100644
+Binary files a/__pycache__/model_class.cpython-313.pyc and b/classes/__pycache__/model_class.cpython-313.pyc differ
+diff --git a/classes/__pycache__/utils_audio.cpython-313.pyc b/classes/__pycache__/utils_audio.cpython-313.pyc
+new file mode 100644
+index 0000000..9365bd5
+Binary files /dev/null and b/classes/__pycache__/utils_audio.cpython-313.pyc differ
+diff --git a/classes/datasets_manipulation.py b/classes/datasets_manipulation.py
+index 8bf94fa..846d1de 100644
+--- a/classes/datasets_manipulation.py
++++ b/classes/datasets_manipulation.py
+@@ -1,129 +1,134 @@
+-import math, random
+-import numpy as np
+-import torch
+-from torch.utils.data import Dataset
+-from pathlib import Path
+-from utils_audio import stft_np, magphase  # note: we use npy caches instead of load_wav
+-
+-class SpeechNoiseDataset(Dataset):
+-    """
+-    Samples random crops from speech cache files (npy) and overlays noise from cache files.
+-    Accepts either lists of original file paths or lists of cached .npy paths.
+-    If a file path ends with .npy it is treated as a cached waveform.
+-    """
+-
+-    def __init__(self,
+-                 speech_files,
+-                 noise_files,
+-                 sample_rate,
+-                 clip_seconds,
+-                 snr_range,
+-                 gain_range,
+-                 clips_per_file,
+-                 noise_probability,
+-                 max_noise_overlays,
+-                 n_fft,
+-                 hop_length,
+-                 use_lazy_cache=True):
+-        # speech_files / noise_files can be list[Path] pointing to .npy caches or original audio paths
+-        self.speech_files = [Path(p) for p in speech_files]
+-        self.noise_files = [Path(p) for p in noise_files]
+-        self.sample_rate = sample_rate
+-        self.clip_length = int(sample_rate * clip_seconds)
+-        self.snr_range = snr_range
+-        self.gain_range = gain_range
+-        self.clips_per_file = clips_per_file
+-        self.noise_probability = noise_probability
+-        self.max_noise_overlays = max_noise_overlays
+-        self.n_fft = n_fft
+-        self.hop_length = hop_length
+-
+-        # lazy cache: map Path -> np.ndarray loaded on first use (keeps memory lower)
+-        self.use_lazy_cache = use_lazy_cache
+-        self._waveform_cache = {}  # Path -> np.ndarray
+-
+-    def __len__(self):
+-        return max(1, len(self.speech_files) * self.clips_per_file)
+-
+-    def _load_waveform(self, p: Path):
+-        # if path points to saved .npy produced by preprocess_datasets.py, use np.load
+-        if p.suffix == '.npy':
+-            if p not in self._waveform_cache:
+-                arr = np.load(str(p))
+-                self._waveform_cache[p] = arr.astype(np.float32)
+-            return self._waveform_cache[p]
+-        # fallback: try to load via utils_audio.load_wav if original audio path used
+-        from utils_audio import load_wav
+-        arr = load_wav(p, self.sample_rate)  # load_wav returns numpy array here
+-        return arr
+-
+-    # (keep other helper functions same: random_crop, mix_by_snr, overlay_noises)
+-    # replace calls to load_wav(...) with self._load_waveform(...)
+-
+-    def random_crop(self, signal):
+-        if signal is None:
+-            return np.zeros(self.clip_length, dtype=np.float32)
+-        if len(signal) < self.clip_length:
+-            signal = np.pad(signal, (0, self.clip_length - len(signal)))
+-        start = random.randint(0, max(0, len(signal) - self.clip_length))
+-        return signal[start:start + self.clip_length]
+-
+-    def mix_by_snr(self, clean, noise, snr_db):
+-        signal_power = np.mean(clean**2) + 1e-12
+-        noise_power = np.mean(noise**2) + 1e-12
+-        scale = math.sqrt(signal_power / (noise_power * 10**(snr_db / 10)))
+-        return clean + noise * scale
+-
+-    def overlay_noises(self, clean):
+-        if not self.noise_files or random.random() > self.noise_probability:
+-            return clean.copy(), False
+-
+-        output = clean.copy()
+-        overlays = random.randint(1, min(self.max_noise_overlays, len(self.noise_files)))
+-
+-        for _ in range(overlays):
+-            noise_file = self.noise_files[random.randint(0, len(self.noise_files)-1)]
+-            noise = self._load_waveform(noise_file)
+-
+-            if len(noise) > self.clip_length:
+-                start = random.randint(0, len(noise) - self.clip_length)
+-                noise = noise[start:start + self.clip_length]
+-
+-            # shorten random subset of noises
+-            if random.random() < 0.7 and len(noise) > 1:
+-                max_len = int(0.8 * self.clip_length)
+-                new_len = random.randint(int(0.05 * self.clip_length), max_len)
+-                start = random.randint(0, max(1, len(noise) - new_len))
+-                noise = noise[start:start + new_len]
+-
+-            offset = random.randint(0, max(0, self.clip_length - len(noise)))
+-            end = offset + len(noise)
+-
+-            if random.random() < 0.5:
+-                snr = random.uniform(*self.snr_range)
+-                mixed = self.mix_by_snr(output[offset:end], noise, snr)
+-            else:
+-                gain = random.uniform(*self.gain_range)
+-                mixed = output[offset:end] + noise * gain
+-
+-            output[offset:end] = mixed
+-
+-        output = np.clip(output, -1.0, 1.0)
+-        return output.astype(np.float32), True
+-
+-    def __getitem__(self, index):
+-        file_idx = (index // self.clips_per_file) % max(1, len(self.speech_files))
+-        speech_path = self.speech_files[file_idx]
+-        speech = self._load_waveform(speech_path)
+-        clean = self.random_crop(speech)
+-        noisy, _ = self.overlay_noises(clean)
+-
+-        spec_noisy = stft_np(noisy, n_fft=self.n_fft, hop_length=self.hop_length)
+-        spec_clean = stft_np(clean, n_fft=self.n_fft, hop_length=self.hop_length)
+-
+-        mag_noisy, _ = magphase(spec_noisy)
+-        mag_clean, _ = magphase(spec_clean)
+-
+-        mag_noisy = np.log1p(mag_noisy).astype(np.float32)
+-        mag_clean = np.log1p(mag_clean).astype(np.float32)
+-        return torch.from_numpy(mag_noisy), torch.from_numpy(mag_clean), noisy, clean
+\ No newline at end of file
++# import math, random
++# import numpy as np
++# import torch
++# from torch.utils.data import Dataset
++# from pathlib import Path
++# from classes.utils_audio import stft_np, magphase  # note: we use npy caches instead of load_wav
++
++# class SpeechNoiseDataset(Dataset):
++#     """
++#     Samples random crops from speech cache files (npy) and overlays noise from cache files.
++#     Accepts either lists of original file paths or lists of cached .npy paths.
++#     If a file path ends with .npy it is treated as a cached waveform.
++#     """
++
++#     def __init__(self,
++#                  speech_files,
++#                  noise_files,
++#                  sample_rate,
++#                  clip_seconds,
++#                  snr_range,
++#                  gain_range,
++#                  clips_per_file,
++#                  noise_probability,
++#                  max_noise_overlays,
++#                  n_fft,
++#                  hop_length,
++#                  use_lazy_cache=True):
++#         # speech_files / noise_files can be list[Path] pointing to .npy caches or original audio paths
++#         self.speech_files = [Path(p) for p in speech_files]
++#         self.noise_files = [Path(p) for p in noise_files]
++#         self.sample_rate = sample_rate
++#         self.clip_length = int(sample_rate * clip_seconds)
++#         self.snr_range = snr_range
++#         self.gain_range = gain_range
++#         self.clips_per_file = clips_per_file
++#         self.noise_probability = noise_probability
++#         self.max_noise_overlays = max_noise_overlays
++#         self.n_fft = n_fft
++#         self.hop_length = hop_length
++
++#         # lazy cache: map Path -> np.ndarray loaded on first use (keeps memory lower)
++#         self.use_lazy_cache = use_lazy_cache
++#         self._waveform_cache = {}  # Path -> np.ndarray
++
++#     def __len__(self):
++#         return max(1, len(self.speech_files) * self.clips_per_file)
++
++#     def _load_waveform(self, p: Path):
++#         # if path points to saved .npy produced by preprocess_datasets.py, use np.load
++#         if p.suffix == '.npy':
++#             if p not in self._waveform_cache:
++#                 arr = np.load(str(p))
++#                 self._waveform_cache[p] = arr.astype(np.float32)
++#             return self._waveform_cache[p]
++#         # fallback: try to load via utils_audio.load_wav if original audio path used
++#         from classes.utils_audio import load_wav
++#         arr = load_wav(p, self.sample_rate)  # load_wav returns numpy array here
++#         return arr
++
++#     # (keep other helper functions same: random_crop, mix_by_snr, overlay_noises)
++#     # replace calls to load_wav(...) with self._load_waveform(...)
++
++#     def random_crop(self, signal):
++#         if signal is None:
++#             return np.zeros(self.clip_length, dtype=np.float32)
++#         if len(signal) < self.clip_length:
++#             signal = np.pad(signal, (0, self.clip_length - len(signal)))
++#         start = random.randint(0, max(0, len(signal) - self.clip_length))
++#         return signal[start:start + self.clip_length]
++
++#     def mix_by_snr(self, clean, noise, snr_db):
++#         signal_power = np.mean(clean**2) + 1e-12
++#         noise_power = np.mean(noise**2) + 1e-12
++#         scale = math.sqrt(signal_power / (noise_power * 10**(snr_db / 10)))
++#         return clean + noise * scale
++
++#     def overlay_noises(self, clean):
++#         if not self.noise_files or random.random() > self.noise_probability:
++#             return clean.copy(), False
++
++#         output = clean.copy()
++#         overlays = random.randint(1, min(self.max_noise_overlays, len(self.noise_files)))
++
++#         for _ in range(overlays):
++#             noise_file = self.noise_files[random.randint(0, len(self.noise_files)-1)]
++#             noise = self._load_waveform(noise_file)
++
++#             if len(noise) > self.clip_length:
++#                 start = random.randint(0, len(noise) - self.clip_length)
++#                 noise = noise[start:start + self.clip_length]
++
++#             # shorten random subset of noises
++#             if random.random() < 0.7 and len(noise) > 1:
++#                 max_len = int(0.8 * self.clip_length)
++#                 new_len = random.randint(int(0.05 * self.clip_length), max_len)
++#                 start = random.randint(0, max(1, len(noise) - new_len))
++#                 noise = noise[start:start + new_len]
++
++#             offset = random.randint(0, max(0, self.clip_length - len(noise)))
++#             end = offset + len(noise)
++
++#             if random.random() < 0.5:
++#                 snr = random.uniform(*self.snr_range)
++#                 mixed = self.mix_by_snr(output[offset:end], noise, snr)
++#             else:
++#                 gain = random.uniform(*self.gain_range)
++#                 mixed = output[offset:end] + noise * gain
++
++#             output[offset:end] = mixed
++
++#         output = np.clip(output, -1.0, 1.0)
++#         return output.astype(np.float32), True
++#     def __getitem__(self, index):
++#         file_idx = index // self.clips_per_file
++#         speech = self._load_waveform(self.speech_files[file_idx])
++#         clean = self.random_crop(speech)
++#         noisy, _ = self.overlay_noises(clean)
++
++#         spec_noisy = stft_np(noisy, n_fft=self.n_fft, hop_length=self.hop_length)
++#         spec_clean = stft_np(clean, n_fft=self.n_fft, hop_length=self.hop_length)
++
++#         mag_noisy, _ = magphase(spec_noisy)
++#         mag_clean, _ = magphase(spec_clean)
++
++#         # --- CROP TO SHARED SHAPE ---
++#         min_freqs = min(mag_noisy.shape[0], mag_clean.shape[0])
++#         min_frames = min(mag_noisy.shape[1], mag_clean.shape[1])
++#         mag_noisy = mag_noisy[:min_freqs, :min_frames]
++#         mag_clean = mag_clean[:min_freqs, :min_frames]
++
++#         mag_noisy = np.log1p(mag_noisy).astype(np.float32)
++#         mag_clean = np.log1p(mag_clean).astype(np.float32)
++
++#         return torch.from_numpy(mag_noisy), torch.from_numpy(mag_clean), noisy, clean
+\ No newline at end of file
+diff --git a/classes/model_class.py b/classes/model_class.py
+index 29e35ba..f2f611c 100644
+--- a/classes/model_class.py
++++ b/classes/model_class.py
+@@ -3,7 +3,7 @@ import torch
+ import torch.nn as nn
+ import numpy as np
+ from pathlib import Path
+-from utils_audio import stft_np, istft_np, magphase
++from classes.utils_audio import stft_np, istft_np, magphase
+ 
+ class SmallDenoiserNetwork(nn.Module):
+     """Simple CNN encoder-decoder for speech denoising."""
+@@ -55,12 +55,22 @@ class SpeechDenoisingModel:
+         loss.backward()
+         self.optimizer.step()
+         return loss.item()
++
++
+     def evaluate_step(self, noisy_magnitude, clean_magnitude):
++        #mismatch
+         self.model.eval()
+         with torch.no_grad():
+             noisy = noisy_magnitude.unsqueeze(1).to(self.device)
+             clean = clean_magnitude.unsqueeze(1).to(self.device)
+             prediction = self.model(noisy)
++
++            if prediction.shape != clean.shape:
++                min_freq = min(prediction.shape[2], clean.shape[2])
++                min_time = min(prediction.shape[3], clean.shape[3])
++                clean = clean[:, :, :min_freq, :min_time]
++                prediction = prediction[:, :, :min_freq, :min_time]
++
+             loss = self.loss_function(prediction, clean)
+         return loss.item(), prediction.cpu().squeeze(1).numpy()
+ 
+@@ -70,7 +80,6 @@ class SpeechDenoisingModel:
+ 
+     def load_checkpoint(self):
+         self.model.load_state_dict(torch.load(str(self.checkpoint_path), map_location=self.device))
+-
+     def infer(self, noisy_waveform, n_fft, hop_length):
+         spectrum = stft_np(noisy_waveform, n_fft=n_fft, hop_length=hop_length)
+         magnitude, phase = magphase(spectrum)
+@@ -81,8 +90,16 @@ class SpeechDenoisingModel:
+             predicted_log = self.model(input_tensor).cpu().squeeze().numpy()
+ 
+         predicted_magnitude = np.expm1(predicted_log)
++
++        # --- Align shapes to avoid broadcasting errors ---
++        min_freq = min(predicted_magnitude.shape[0], phase.shape[0])
++        min_time = min(predicted_magnitude.shape[1], phase.shape[1])
++        predicted_magnitude = predicted_magnitude[:min_freq, :min_time]
++        phase = phase[:min_freq, :min_time]
++        # ----------------------------------------------
++
+         reconstructed = predicted_magnitude * np.exp(1j * phase)
+         waveform = istft_np(reconstructed, hop_length=hop_length)
+ 
+         waveform = waveform / (max(1e-9, np.max(np.abs(waveform))))
+-        return waveform, predicted_magnitude, phase
+\ No newline at end of file
++        return waveform, predicted_magnitude, phase
+diff --git a/data/noise/blender-37366.mp3 b/data_raw/noise/blender-37366.mp3
+similarity index 100%
+rename from data/noise/blender-37366.mp3
+rename to data_raw/noise/blender-37366.mp3
+diff --git a/data/noise/blender-59679.mp3 b/data_raw/noise/blender-59679.mp3
+similarity index 100%
+rename from data/noise/blender-59679.mp3
+rename to data_raw/noise/blender-59679.mp3
+diff --git a/data/noise/blender-72304.mp3 b/data_raw/noise/blender-72304.mp3
+similarity index 100%
+rename from data/noise/blender-72304.mp3
+rename to data_raw/noise/blender-72304.mp3
+diff --git a/data/noise/blender-76398.mp3 b/data_raw/noise/blender-76398.mp3
+similarity index 100%
+rename from data/noise/blender-76398.mp3
+rename to data_raw/noise/blender-76398.mp3
+diff --git a/data/noise/car-engine-372477.mp3 b/data_raw/noise/car-engine-372477.mp3
+similarity index 100%
+rename from data/noise/car-engine-372477.mp3
+rename to data_raw/noise/car-engine-372477.mp3
+diff --git a/data/noise/car-engine-ignition-fail-352768.mp3 b/data_raw/noise/car-engine-ignition-fail-352768.mp3
+similarity index 100%
+rename from data/noise/car-engine-ignition-fail-352768.mp3
+rename to data_raw/noise/car-engine-ignition-fail-352768.mp3
+diff --git a/data/noise/car-engine-roaring-376881.mp3 b/data_raw/noise/car-engine-roaring-376881.mp3
+similarity index 100%
+rename from data/noise/car-engine-roaring-376881.mp3
+rename to data_raw/noise/car-engine-roaring-376881.mp3
+diff --git a/data/noise/distant-straining-lawnmower-56421.mp3 b/data_raw/noise/distant-straining-lawnmower-56421.mp3
+similarity index 100%
+rename from data/noise/distant-straining-lawnmower-56421.mp3
+rename to data_raw/noise/distant-straining-lawnmower-56421.mp3
+diff --git a/data/noise/lawnmower-34293.mp3 b/data_raw/noise/lawnmower-34293.mp3
+similarity index 100%
+rename from data/noise/lawnmower-34293.mp3
+rename to data_raw/noise/lawnmower-34293.mp3
+diff --git a/data/noise/lawnmower-68794.mp3 b/data_raw/noise/lawnmower-68794.mp3
+similarity index 100%
+rename from data/noise/lawnmower-68794.mp3
+rename to data_raw/noise/lawnmower-68794.mp3
+diff --git a/data/noise/lawnmower-drone-61794.mp3 b/data_raw/noise/lawnmower-drone-61794.mp3
+similarity index 100%
+rename from data/noise/lawnmower-drone-61794.mp3
+rename to data_raw/noise/lawnmower-drone-61794.mp3
+diff --git a/data/noise/lawnmower-starting-sound-191904.mp3 b/data_raw/noise/lawnmower-starting-sound-191904.mp3
+similarity index 100%
+rename from data/noise/lawnmower-starting-sound-191904.mp3
+rename to data_raw/noise/lawnmower-starting-sound-191904.mp3
+diff --git a/data/noise/vacuum-1-267115.mp3 b/data_raw/noise/vacuum-1-267115.mp3
+similarity index 100%
+rename from data/noise/vacuum-1-267115.mp3
+rename to data_raw/noise/vacuum-1-267115.mp3
+diff --git a/data/noise/vacuum-2-421350.mp3 b/data_raw/noise/vacuum-2-421350.mp3
+similarity index 100%
+rename from data/noise/vacuum-2-421350.mp3
+rename to data_raw/noise/vacuum-2-421350.mp3
+diff --git a/data/noise/vacuum-58905.mp3 b/data_raw/noise/vacuum-58905.mp3
+similarity index 100%
+rename from data/noise/vacuum-58905.mp3
+rename to data_raw/noise/vacuum-58905.mp3
+diff --git a/data/noise/volvo-engine-431665.mp3 b/data_raw/noise/volvo-engine-431665.mp3
+similarity index 100%
+rename from data/noise/volvo-engine-431665.mp3
+rename to data_raw/noise/volvo-engine-431665.mp3
+diff --git a/data/speech/podcast.mp3 b/data_raw/speech/podcast.mp3
+similarity index 100%
+rename from data/speech/podcast.mp3
+rename to data_raw/speech/podcast.mp3
+diff --git a/manifests/noise_files.txt b/manifests/noise_files.txt
+deleted file mode 100644
+index ffb9578..0000000
+--- a/manifests/noise_files.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-data/noise/volvo-engine-431665.mp3
+-data/noise/vacuum-58905.mp3
+-data/noise/lawnmower-68794.mp3
+-data/noise/vacuum-1-267115.mp3
+-data/noise/distant-straining-lawnmower-56421.mp3
+-data/noise/car-engine-roaring-376881.mp3
+-data/noise/blender-72304.mp3
+-data/noise/lawnmower-34293.mp3
+-data/noise/blender-76398.mp3
+-data/noise/blender-59679.mp3
+-data/noise/lawnmower-drone-61794.mp3
+-data/noise/vacuum-2-421350.mp3
+-data/noise/blender-37366.mp3
+-data/noise/lawnmower-starting-sound-191904.mp3
+-data/noise/car-engine-ignition-fail-352768.mp3
+-data/noise/car-engine-372477.mp3
+diff --git a/manifests/speech_files.txt b/manifests/speech_files.txt
+deleted file mode 100644
+index b1426c6..0000000
+--- a/manifests/speech_files.txt
++++ /dev/null
+@@ -1,200 +0,0 @@
+-cache/podcast_clip0.wav
+-cache/podcast_clip1.wav
+-cache/podcast_clip2.wav
+-cache/podcast_clip3.wav
+-cache/podcast_clip4.wav
+-cache/podcast_clip5.wav
+-cache/podcast_clip6.wav
+-cache/podcast_clip7.wav
+-cache/podcast_clip8.wav
+-cache/podcast_clip9.wav
+-cache/podcast_clip10.wav
+-cache/podcast_clip11.wav
+-cache/podcast_clip12.wav
+-cache/podcast_clip13.wav
+-cache/podcast_clip14.wav
+-cache/podcast_clip15.wav
+-cache/podcast_clip16.wav
+-cache/podcast_clip17.wav
+-cache/podcast_clip18.wav
+-cache/podcast_clip19.wav
+-cache/podcast_clip20.wav
+-cache/podcast_clip21.wav
+-cache/podcast_clip22.wav
+-cache/podcast_clip23.wav
+-cache/podcast_clip24.wav
+-cache/podcast_clip25.wav
+-cache/podcast_clip26.wav
+-cache/podcast_clip27.wav
+-cache/podcast_clip28.wav
+-cache/podcast_clip29.wav
+-cache/podcast_clip30.wav
+-cache/podcast_clip31.wav
+-cache/podcast_clip32.wav
+-cache/podcast_clip33.wav
+-cache/podcast_clip34.wav
+-cache/podcast_clip35.wav
+-cache/podcast_clip36.wav
+-cache/podcast_clip37.wav
+-cache/podcast_clip38.wav
+-cache/podcast_clip39.wav
+-cache/podcast_clip40.wav
+-cache/podcast_clip41.wav
+-cache/podcast_clip42.wav
+-cache/podcast_clip43.wav
+-cache/podcast_clip44.wav
+-cache/podcast_clip45.wav
+-cache/podcast_clip46.wav
+-cache/podcast_clip47.wav
+-cache/podcast_clip48.wav
+-cache/podcast_clip49.wav
+-cache/podcast_clip50.wav
+-cache/podcast_clip51.wav
+-cache/podcast_clip52.wav
+-cache/podcast_clip53.wav
+-cache/podcast_clip54.wav
+-cache/podcast_clip55.wav
+-cache/podcast_clip56.wav
+-cache/podcast_clip57.wav
+-cache/podcast_clip58.wav
+-cache/podcast_clip59.wav
+-cache/podcast_clip60.wav
+-cache/podcast_clip61.wav
+-cache/podcast_clip62.wav
+-cache/podcast_clip63.wav
+-cache/podcast_clip64.wav
+-cache/podcast_clip65.wav
+-cache/podcast_clip66.wav
+-cache/podcast_clip67.wav
+-cache/podcast_clip68.wav
+-cache/podcast_clip69.wav
+-cache/podcast_clip70.wav
+-cache/podcast_clip71.wav
+-cache/podcast_clip72.wav
+-cache/podcast_clip73.wav
+-cache/podcast_clip74.wav
+-cache/podcast_clip75.wav
+-cache/podcast_clip76.wav
+-cache/podcast_clip77.wav
+-cache/podcast_clip78.wav
+-cache/podcast_clip79.wav
+-cache/podcast_clip80.wav
+-cache/podcast_clip81.wav
+-cache/podcast_clip82.wav
+-cache/podcast_clip83.wav
+-cache/podcast_clip84.wav
+-cache/podcast_clip85.wav
+-cache/podcast_clip86.wav
+-cache/podcast_clip87.wav
+-cache/podcast_clip88.wav
+-cache/podcast_clip89.wav
+-cache/podcast_clip90.wav
+-cache/podcast_clip91.wav
+-cache/podcast_clip92.wav
+-cache/podcast_clip93.wav
+-cache/podcast_clip94.wav
+-cache/podcast_clip95.wav
+-cache/podcast_clip96.wav
+-cache/podcast_clip97.wav
+-cache/podcast_clip98.wav
+-cache/podcast_clip99.wav
+-cache/podcast_clip100.wav
+-cache/podcast_clip101.wav
+-cache/podcast_clip102.wav
+-cache/podcast_clip103.wav
+-cache/podcast_clip104.wav
+-cache/podcast_clip105.wav
+-cache/podcast_clip106.wav
+-cache/podcast_clip107.wav
+-cache/podcast_clip108.wav
+-cache/podcast_clip109.wav
+-cache/podcast_clip110.wav
+-cache/podcast_clip111.wav
+-cache/podcast_clip112.wav
+-cache/podcast_clip113.wav
+-cache/podcast_clip114.wav
+-cache/podcast_clip115.wav
+-cache/podcast_clip116.wav
+-cache/podcast_clip117.wav
+-cache/podcast_clip118.wav
+-cache/podcast_clip119.wav
+-cache/podcast_clip120.wav
+-cache/podcast_clip121.wav
+-cache/podcast_clip122.wav
+-cache/podcast_clip123.wav
+-cache/podcast_clip124.wav
+-cache/podcast_clip125.wav
+-cache/podcast_clip126.wav
+-cache/podcast_clip127.wav
+-cache/podcast_clip128.wav
+-cache/podcast_clip129.wav
+-cache/podcast_clip130.wav
+-cache/podcast_clip131.wav
+-cache/podcast_clip132.wav
+-cache/podcast_clip133.wav
+-cache/podcast_clip134.wav
+-cache/podcast_clip135.wav
+-cache/podcast_clip136.wav
+-cache/podcast_clip137.wav
+-cache/podcast_clip138.wav
+-cache/podcast_clip139.wav
+-cache/podcast_clip140.wav
+-cache/podcast_clip141.wav
+-cache/podcast_clip142.wav
+-cache/podcast_clip143.wav
+-cache/podcast_clip144.wav
+-cache/podcast_clip145.wav
+-cache/podcast_clip146.wav
+-cache/podcast_clip147.wav
+-cache/podcast_clip148.wav
+-cache/podcast_clip149.wav
+-cache/podcast_clip150.wav
+-cache/podcast_clip151.wav
+-cache/podcast_clip152.wav
+-cache/podcast_clip153.wav
+-cache/podcast_clip154.wav
+-cache/podcast_clip155.wav
+-cache/podcast_clip156.wav
+-cache/podcast_clip157.wav
+-cache/podcast_clip158.wav
+-cache/podcast_clip159.wav
+-cache/podcast_clip160.wav
+-cache/podcast_clip161.wav
+-cache/podcast_clip162.wav
+-cache/podcast_clip163.wav
+-cache/podcast_clip164.wav
+-cache/podcast_clip165.wav
+-cache/podcast_clip166.wav
+-cache/podcast_clip167.wav
+-cache/podcast_clip168.wav
+-cache/podcast_clip169.wav
+-cache/podcast_clip170.wav
+-cache/podcast_clip171.wav
+-cache/podcast_clip172.wav
+-cache/podcast_clip173.wav
+-cache/podcast_clip174.wav
+-cache/podcast_clip175.wav
+-cache/podcast_clip176.wav
+-cache/podcast_clip177.wav
+-cache/podcast_clip178.wav
+-cache/podcast_clip179.wav
+-cache/podcast_clip180.wav
+-cache/podcast_clip181.wav
+-cache/podcast_clip182.wav
+-cache/podcast_clip183.wav
+-cache/podcast_clip184.wav
+-cache/podcast_clip185.wav
+-cache/podcast_clip186.wav
+-cache/podcast_clip187.wav
+-cache/podcast_clip188.wav
+-cache/podcast_clip189.wav
+-cache/podcast_clip190.wav
+-cache/podcast_clip191.wav
+-cache/podcast_clip192.wav
+-cache/podcast_clip193.wav
+-cache/podcast_clip194.wav
+-cache/podcast_clip195.wav
+-cache/podcast_clip196.wav
+-cache/podcast_clip197.wav
+-cache/podcast_clip198.wav
+-cache/podcast_clip199.wav
+diff --git a/preprocess_datasets.py b/preprocess_datasets.py
+deleted file mode 100644
+index 3b32a84..0000000
+--- a/preprocess_datasets.py
++++ /dev/null
+@@ -1,78 +0,0 @@
+-# preprocess_datasets.py
+-import os
+-from pathlib import Path
+-import librosa
+-import soundfile as sf
+-import numpy as np
+-from tqdm import tqdm
+-
+-# -------------------------
+-# STATIC CONFIG
+-# -------------------------
+-SPEECH_DIR = Path("data/speech")
+-NOISE_DIR = Path("data/noise")
+-CACHE_DIR = Path("cache")
+-MANIFESTS_DIR = Path("manifests")
+-SAMPLE_RATE = 16000
+-CLIP_SECONDS = 2.0
+-MIN_NOISE_LENGTH = 0.05  # fraction of clip
+-MAX_NOISE_LENGTH = 0.8   # fraction of clip
+-CLIPS_PER_SPEECH_FILE = 200
+-
+-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+-MANIFESTS_DIR.mkdir(parents=True, exist_ok=True)
+-
+-# -------------------------
+-# HELPER FUNCTIONS
+-# -------------------------
+-def load_audio(path, sr=SAMPLE_RATE):
+-    y, _ = librosa.load(path, sr=sr, mono=True)
+-    return y.astype(np.float32)
+-
+-def save_audio(path, y, sr=SAMPLE_RATE):
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    sf.write(path, y, sr)
+-
+-def chop_speech_file(speech_path, clip_seconds=CLIP_SECONDS, clips_per_file=CLIPS_PER_SPEECH_FILE):
+-    y = load_audio(speech_path)
+-    clip_len = int(clip_seconds * SAMPLE_RATE)
+-    clips = []
+-    for i in tqdm(range(clips_per_file), desc=f"Chopping {speech_path.name}"):
+-        if len(y) <= clip_len:
+-            start = 0
+-        else:
+-            start = np.random.randint(0, len(y) - clip_len)
+-        clip = y[start:start + clip_len]
+-        clip_path = CACHE_DIR / f"{speech_path.stem}_clip{i}.wav"
+-        save_audio(clip_path, clip)
+-        clips.append(clip_path)
+-    return clips
+-
+-# -------------------------
+-# PROCESS DATASETS
+-# -------------------------
+-speech_files = list(SPEECH_DIR.glob("*.wav")) + list(SPEECH_DIR.glob("*.mp3"))
+-noise_files = list(NOISE_DIR.glob("*.wav")) + list(NOISE_DIR.glob("*.mp3"))
+-
+-speech_manifest = MANIFESTS_DIR / "speech_files.txt"
+-noise_manifest = MANIFESTS_DIR / "noise_files.txt"
+-
+-# chop long speech files
+-all_speech_clips = []
+-for speech_file in tqdm(speech_files, desc="Processing speech files"):
+-    clips = chop_speech_file(speech_file)
+-    all_speech_clips.extend(clips)
+-
+-# write speech manifest
+-with open(speech_manifest, "w") as f:
+-    for clip in all_speech_clips:
+-        f.write(str(clip) + "\n")
+-
+-# noise manifest is just the raw files
+-with open(noise_manifest, "w") as f:
+-    for nf in noise_files:
+-        f.write(str(nf) + "\n")
+-
+-print(f"Prepared {len(all_speech_clips)} speech clips")
+-print(f"Found {len(noise_files)} noise files")
+-print("Manifests written to:", MANIFESTS_DIR)
+\ No newline at end of file
+diff --git a/train.py b/train.py
+deleted file mode 100644
+index b23cc57..0000000
+--- a/train.py
++++ /dev/null
+@@ -1,98 +0,0 @@
+-# train.py
+-import random
+-from pathlib import Path
+-import torch
+-from torch.utils.data import DataLoader
+-from tqdm import tqdm
+-from classes.model_class import SpeechDenoisingModel
+-from classes.datasets_manipulation import SpeechNoiseDataset
+-from utils_audio import collect_files, set_seed
+-
+-# --------------------
+-# Config
+-# --------------------
+-SPEECH_DIR = Path("data/speech")
+-NOISE_DIR = Path("data/noise")
+-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+-SAMPLE_RATE = 16000
+-N_FFT = 512
+-HOP_LENGTH = 128
+-CLIP_SECONDS = 2.0
+-BATCH_SIZE = 8
+-EPOCHS = 10
+-LEARNING_RATE = 1e-3
+-CHECKPOINT_PATH = Path("checkpoints/best.pth")
+-
+-# Dataset behavior
+-SPEECH_CLIPS_PER_FILE = 200
+-NOISE_PROBABILITY = 0.6
+-MAX_NOISE_OVERLAYS = 3
+-SNR_RANGE = (-10.0, 5.0)
+-GAIN_RANGE = (0.3, 1.5)
+-
+-# --------------------
+-# Main
+-# --------------------
+-def main():
+-    set_seed(0)
+-
+-    speech_files = collect_files(SPEECH_DIR)
+-    noise_files = collect_files(NOISE_DIR)
+-
+-    if not speech_files:
+-        print(f"No speech files found in {SPEECH_DIR}.")
+-        return
+-    if not noise_files:
+-        print(f"No noise files found in {NOISE_DIR}.")
+-        return
+-
+-    random.shuffle(speech_files)
+-    split = max(1, int(0.9 * len(speech_files)))
+-    train_files = speech_files[:split]
+-    val_files = speech_files[split:] or speech_files[:1]  # fallback if split=0
+-
+-    # Create datasets
+-    train_dataset = SpeechNoiseDataset(
+-        train_files, noise_files, SAMPLE_RATE, CLIP_SECONDS, SNR_RANGE, GAIN_RANGE,
+-        SPEECH_CLIPS_PER_FILE, NOISE_PROBABILITY, MAX_NOISE_OVERLAYS, N_FFT, HOP_LENGTH
+-    )
+-    val_dataset = SpeechNoiseDataset(
+-        val_files, noise_files, SAMPLE_RATE, CLIP_SECONDS, SNR_RANGE, GAIN_RANGE,
+-        max(1, SPEECH_CLIPS_PER_FILE // 2), NOISE_PROBABILITY, MAX_NOISE_OVERLAYS, N_FFT, HOP_LENGTH
+-    )
+-
+-    if len(train_dataset) == 0:
+-        print("Training dataset is empty. Did you preprocess the speech files?")
+-        return
+-    if len(val_dataset) == 0:
+-        print("Validation dataset is empty. Using training dataset for validation.")
+-        val_dataset = train_dataset
+-
+-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE)
+-
+-    model = SpeechDenoisingModel(device=DEVICE, learning_rate=LEARNING_RATE, checkpoint_path=CHECKPOINT_PATH)
+-
+-    for epoch in range(1, EPOCHS + 1):
+-        # Training
+-        total_loss = 0
+-        for noisy, clean, _, _ in tqdm(train_loader, desc=f"Epoch {epoch} [Train]"):
+-            loss = model.train_step(noisy, clean)
+-            total_loss += loss
+-        avg_train_loss = total_loss / max(1, len(train_loader))
+-
+-        # Validation
+-        total_val_loss = 0
+-        for noisy, clean, _, _ in tqdm(val_loader, desc=f"Epoch {epoch} [Val]"):
+-            val_loss, _ = model.evaluate_step(noisy, clean)
+-            total_val_loss += val_loss
+-        avg_val_loss = total_val_loss / max(1, len(val_loader))
+-
+-        print(f"Epoch {epoch}: train={avg_train_loss:.6f} val={avg_val_loss:.6f}")
+-
+-    # Save model
+-    model.save_checkpoint()
+-    print(f"Model checkpoint saved to {CHECKPOINT_PATH}")
+-
+-if __name__ == "__main__":
+-    main()
+\ No newline at end of file
+diff --git a/utils_audio.py b/utils_audio.py
+deleted file mode 100644
+index 5ef619c..0000000
+--- a/utils_audio.py
++++ /dev/null
+@@ -1,108 +0,0 @@
+-# utils_audio.py
+-from pathlib import Path
+-from typing import List
+-import random
+-import numpy as np
+-import torch
+-# Prefer torchaudio if available for speed/resampling. Fall back to librosa + soundfile.
+-try:
+-    import torchaudio
+-    HAS_TORCHAUDIO = True
+-except Exception:
+-    HAS_TORCHAUDIO = False
+-    import librosa
+-    import soundfile as sf
+-
+-def load_wav(path: Path, target_sr: int = 16000) -> np.ndarray:
+-    """
+-    Load audio file (wav/mp3/flac) as mono float32 numpy array resampled to target_sr.
+-    Returns waveform only (shape=(n_samples,)).
+-    """
+-    p = str(path)
+-    if HAS_TORCHAUDIO:
+-        waveform, src_sr = torchaudio.load(p)          # shape (channels, samples)
+-        waveform = waveform.mean(dim=0).numpy()        # mono
+-        if src_sr != target_sr:
+-            waveform = torchaudio.functional.resample(
+-                torch.from_numpy(waveform).unsqueeze(0), src_sr, target_sr
+-            ).squeeze(0).numpy()
+-        # normalize to [-1,1]
+-        mx = np.max(np.abs(waveform)) or 1.0
+-        return (waveform / mx).astype(np.float32)
+-    else:
+-        y, _ = librosa.load(p, sr=target_sr, mono=True)
+-        mx = np.max(np.abs(y)) or 1.0
+-        return (y / mx).astype(np.float32)
+-
+-def save_wav(path: Path, waveform: np.ndarray, sample_rate: int = 16000) -> None:
+-    """Write waveform to disk. Overwrites existing file."""
+-    path = Path(path)
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    if HAS_TORCHAUDIO:
+-        import torch
+-        tensor = torch.from_numpy(waveform).unsqueeze(0)
+-        torchaudio.save(str(path), tensor, sample_rate)
+-    else:
+-        sf.write(str(path), waveform, sample_rate)
+-
+-def stft_np(waveform: np.ndarray, n_fft: int = 512, hop_length: int = 128):
+-    """
+-    Return complex STFT matrix (numpy). Signature matches calls in your code.
+-    """
+-    if HAS_TORCHAUDIO:
+-        import torch
+-        t = torch.from_numpy(waveform).unsqueeze(0)
+-        spec = torch.stft(t, n_fft=n_fft, hop_length=hop_length,
+-                          win_length=n_fft, window=torch.hann_window(n_fft),
+-                          return_complex=True)
+-        return spec.squeeze(0).numpy()
+-    else:
+-        import librosa
+-        return librosa.stft(waveform, n_fft=n_fft, hop_length=hop_length,
+-                            win_length=n_fft, window='hann', center=True)
+-
+-def istft_np(spec_complex: np.ndarray, hop_length: int = 128):
+-    """
+-    Inverse STFT. Returns time-domain numpy waveform.
+-    """
+-    if HAS_TORCHAUDIO:
+-        import torch
+-        # Convert numpy complex array to a complex torch tensor. Some torchaudio
+-        # builds don't provide torchaudio.functional.istft; use torch.istft
+-        # (part of PyTorch) which is commonly available.
+-        t = torch.from_numpy(spec_complex)
+-        # ensure complex dtype
+-        if not torch.is_complex(t):
+-            t = t.to(torch.complex64)
+-        t = t.unsqueeze(0)
+-        n_fft = (spec_complex.shape[0] - 1) * 2
+-        # Use torch.istft (safer across torchaudio versions)
+-        x = torch.istft(t, n_fft=n_fft, hop_length=hop_length,
+-                         win_length=n_fft, window=torch.hann_window(n_fft))
+-        return x.squeeze(0).numpy()
+-    else:
+-        import librosa
+-        n_fft = (spec_complex.shape[0] - 1) * 2
+-        return librosa.istft(spec_complex, hop_length=hop_length, win_length=n_fft, window='hann', center=True)
+-
+-def magphase(spec_complex: np.ndarray):
+-    """Return magnitude and phase (numpy) from complex STFT matrix."""
+-    return np.abs(spec_complex), np.angle(spec_complex)
+-
+-def collect_files(directory: Path, extensions: List[str] = ('.wav', '.mp3', '.flac')) -> List[Path]:
+-    """Recursively collect audio files. Returns sorted list of Path objects."""
+-    p = Path(directory)
+-    out = []
+-    for ext in extensions:
+-        out.extend(list(p.rglob(f'*{ext}')))
+-    return sorted(out)
+-
+-def set_seed(seed: int = 0) -> None:
+-    """Set python/numpy/random seeds for reproducibility."""
+-    random.seed(seed)
+-    np.random.seed(seed)
+-    try:
+-        import torch
+-        torch.manual_seed(seed)
+-    except Exception:
+-        pass
+\ No newline at end of file
+diff --git a/visualize_results.py b/visualize_results.py
+deleted file mode 100644
+index 337b263..0000000
+--- a/visualize_results.py
++++ /dev/null
+@@ -1,96 +0,0 @@
+-# visualize_results.py
+-import numpy as np
+-import matplotlib.pyplot as plt
+-from pathlib import Path
+-import torch
+-from utils_audio import stft_np, collect_files
+-from classes.model_class import SpeechDenoisingModel
+-from classes.datasets_manipulation import SpeechNoiseDataset
+-from torch.utils.data import DataLoader
+-
+-SPEECH_DIR = Path("data/speech")
+-NOISE_DIR = Path("data/noise")
+-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+-SAMPLE_RATE = 16000
+-N_FFT = 512
+-HOP_LENGTH = 128
+-CLIP_SECONDS = 2.0
+-BATCH_SIZE = 1
+-EPOCHS = 2
+-LEARNING_RATE = 1e-3
+-CHECKPOINT_PATH = Path("checkpoints/best.pth")
+-
+-# Dataset behavior
+-SPEECH_CLIPS_PER_FILE = 200
+-NOISE_PROBABILITY = 0.6
+-MAX_NOISE_OVERLAYS = 3
+-SNR_RANGE = (-10.0, 5.0)
+-GAIN_RANGE = (0.3, 1.5)
+-
+-class ResultVisualizer:
+-    def __init__(self, output_dir="figs"):
+-        self.output_dir = Path(output_dir)
+-        self.output_dir.mkdir(parents=True, exist_ok=True)
+-
+-    def plot_waveform(self, waveform, name):
+-        time_axis = np.arange(waveform.size) / SAMPLE_RATE
+-        plt.figure(figsize=(8, 2))
+-        plt.plot(time_axis, waveform)
+-        plt.xlabel("Time (s)")
+-        plt.tight_layout()
+-        plt.savefig(self.output_dir / f"{name}_wave.png")
+-        plt.close()
+-
+-    def plot_spectrogram(self, magnitude, name):
+-        plt.figure(figsize=(8, 3))
+-        plt.imshow(np.log1p(magnitude)[::-1, :], aspect='auto', origin='lower')
+-        plt.tight_layout()
+-        plt.savefig(self.output_dir / f"{name}_spec.png")
+-        plt.close()
+-
+-    def compare(self, noisy, estimated, clean=None):
+-        self.plot_waveform(noisy, "noisy")
+-        self.plot_waveform(estimated, "estimated")
+-        if clean is not None:
+-            self.plot_waveform(clean, "clean")
+-        self.plot_spectrogram(np.abs(stft_np(noisy, n_fft=N_FFT, hop_length=HOP_LENGTH)), "noisy")
+-        self.plot_spectrogram(np.abs(stft_np(estimated, n_fft=N_FFT, hop_length=HOP_LENGTH)), "estimated")
+-        
+-
+-def main():
+-    visualizer = ResultVisualizer()
+-    model = SpeechDenoisingModel(DEVICE, LEARNING_RATE, CHECKPOINT_PATH)
+-    model.load_checkpoint()
+-    speech_files = collect_files(SPEECH_DIR)
+-    noise_files = collect_files(NOISE_DIR)
+-    test_dataset = SpeechNoiseDataset(
+-    speech_files[:2], noise_files, SAMPLE_RATE, CLIP_SECONDS, SNR_RANGE, GAIN_RANGE,
+-    max(1, SPEECH_CLIPS_PER_FILE // 2), NOISE_PROBABILITY, MAX_NOISE_OVERLAYS, N_FFT, HOP_LENGTH
+- )
+-    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+-    noisy_waveform = None
+-    clean_waveform = None
+-    # Grab the first sample from the test loader (batch_size==1 by default here)
+-    for i, (mag_noisy, mag_clean, noisy_batch, clean_batch) in enumerate(test_loader):
+-        # take only the first example in the batch
+-        if isinstance(noisy_batch, torch.Tensor):
+-            noisy_waveform = noisy_batch[0].cpu().numpy()
+-        else:
+-            noisy_waveform = np.asarray(noisy_batch[0])
+-        if isinstance(clean_batch, torch.Tensor):
+-            clean_waveform = clean_batch[0].cpu().numpy()
+-        else:
+-            clean_waveform = np.asarray(clean_batch[0])
+-        break
+-
+-    if noisy_waveform is None:
+-        raise RuntimeError("No test samples available to visualize. Is your dataset empty?")
+-
+-    # model.infer returns (waveform, predicted_magnitude, phase)
+-    estimated_waveform, _, _ = model.infer(noisy_waveform, N_FFT, HOP_LENGTH)
+-    print("Visualizing results...")
+-    visualizer.compare(noisy_waveform, estimated_waveform, clean_waveform)
+-    print("Figures saved to:", visualizer.output_dir)
+-
+-if __name__ == "__main__":
+-    main()

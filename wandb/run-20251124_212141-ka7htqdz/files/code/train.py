@@ -26,8 +26,7 @@ WANDB_CFG = CONFIG.get("wandb", {})
 TRAIN_AUDIO_DIR = Path(PATHS_CFG["processed_train_dir"])
 VAL_AUDIO_DIR = Path(PATHS_CFG["processed_val_dir"])
 CHECKPOINT_PATH = Path(PATHS_CFG["checkpoint_path"])
-CHECKPOINT_INTERVAL = int(TRAIN_CFG.get("checkpoint_interval", 5))  # Save checkpoint every N epochs
-MODEL_TYPE = TRAIN_CFG.get("model_type", "small")
+
 SAMPLE_RATE = int(GLOBAL_CFG["sample_rate"])
 N_FFT = int(GLOBAL_CFG["stft"]["n_fft"])
 HOP_LENGTH = int(GLOBAL_CFG["stft"]["hop_length"])
@@ -37,14 +36,12 @@ EPOCHS = int(TRAIN_CFG["epochs"])
 LEARNING_RATE = float(TRAIN_CFG["learning_rate"])
 EXPERIMENT_NAME = TRAIN_CFG.get("experiment_name", "run")
 
-PHASE_SUPPORT = TRAIN_CFG.get("phase_support", True)
-
 device_cfg = TRAIN_CFG.get("device", "auto")
 if device_cfg == "auto":
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 else:
     DEVICE = device_cfg
-print(f"Using device: {DEVICE}")
+
 # -----------------------
 # Optional wandb setup
 # -----------------------
@@ -105,7 +102,6 @@ def init_wandb():
 # Dataset creation
 # -----------------------
 def build_datasets():
-    """Build train and val datasets from preprocessed files on disk."""
     clean_train_files = sorted(TRAIN_AUDIO_DIR.glob("clean_*.wav"))
     noisy_train_files = sorted(TRAIN_AUDIO_DIR.glob("noisy_*.wav"))
 
@@ -126,7 +122,6 @@ def build_datasets():
         sample_rate=SAMPLE_RATE,
         n_fft=N_FFT,
         hop_length=HOP_LENGTH,
-        return_phase=PHASE_SUPPORT,  # Enable phase return based on config
     )
 
     val_dataset = ProcessedPairDataset(
@@ -135,7 +130,6 @@ def build_datasets():
         sample_rate=SAMPLE_RATE,
         n_fft=N_FFT,
         hop_length=HOP_LENGTH,
-        return_phase=PHASE_SUPPORT,  # Enable phase return based on config
     )
 
     return train_dataset, val_dataset
@@ -157,9 +151,7 @@ def main():
     model = SpeechDenoisingModel(
         device=DEVICE,
         learning_rate=LEARNING_RATE,
-        model_type=MODEL_TYPE,
         checkpoint_path=str(CHECKPOINT_PATH),
-        phase_support=PHASE_SUPPORT,
     )
 
     run = init_wandb()
@@ -173,44 +165,25 @@ def main():
         running_loss = 0.0
         count = 0
         train_bar = tqdm(train_loader, desc="Train", unit="batch")
-        if PHASE_SUPPORT:
-            for noisy_mag, clean_mag, noisy_phase, clean_phase in train_bar:
-                loss = model.train_step_with_phase(noisy_mag, clean_mag, noisy_phase, clean_phase)
-                running_loss += loss
-                count += 1
-                global_step += 1
 
-                avg_loss = running_loss / max(1, count)
-                train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
+        for noisy_mag, clean_mag in train_bar:
+            loss = model.train_step(noisy_mag, clean_mag)
+            running_loss += loss
+            count += 1
+            global_step += 1
 
-                if run is not None:
-                    wandb.log(
-                        {
-                            "train/loss": loss,
-                            "train/avg_loss": avg_loss,
-                            "epoch": epoch + 1,
-                            "step": global_step,
-                        }
-                    )
-        else:
-            for noisy_mag, clean_mag in train_bar:
-                loss = model.train_step(noisy_mag, clean_mag)
-                running_loss += loss
-                count += 1
-                global_step += 1
+            avg_loss = running_loss / max(1, count)
+            train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
 
-                avg_loss = running_loss / max(1, count)
-                train_bar.set_postfix(loss=f"{loss:.4f}", avg=f"{avg_loss:.4f}")
-
-                if run is not None:
-                    wandb.log(
-                        {
-                            "train/loss": loss,
-                            "train/avg_loss": avg_loss,
-                            "epoch": epoch + 1,
-                            "step": global_step,
-                        }
-                    )
+            if run is not None:
+                wandb.log(
+                    {
+                        "train/loss": loss,
+                        "train/avg_loss": avg_loss,
+                        "epoch": epoch + 1,
+                        "step": global_step,
+                    }
+                )
 
         train_avg = running_loss / max(1, count)
         print(f"Train avg loss: {train_avg:.5f}")
@@ -221,19 +194,11 @@ def main():
         val_bar = tqdm(val_loader, desc="Val  ", unit="batch")
 
         with torch.no_grad():
-            if PHASE_SUPPORT:
-                for noisy_mag, clean_mag, noisy_phase, clean_phase in val_bar:
-                    loss, _ = model.evaluate_step_with_phase(noisy_mag, clean_mag, noisy_phase, clean_phase)
-                    val_loss_sum += loss
-                    val_count += 1
-                    val_avg = val_loss_sum / max(1, val_count)
-                    val_bar.set_postfix(avg=f"{val_avg:.4f}")
-            else:
-                for noisy_mag, clean_mag in val_bar:
-                    loss, _ = model.evaluate_step(noisy_mag, clean_mag)
-                    val_loss_sum += loss
-                    val_count += 1
-                    val_avg = val_loss_sum / max(1, val_count)
+            for noisy_mag, clean_mag in val_bar:
+                loss, _ = model.evaluate_step(noisy_mag, clean_mag)
+                val_loss_sum += loss
+                val_count += 1
+                val_avg = val_loss_sum / max(1, val_count)
                 val_bar.set_postfix(avg=f"{val_avg:.4f}")
 
         val_avg = val_loss_sum / max(1, val_count)
@@ -253,13 +218,6 @@ def main():
             model.save_checkpoint()
             print(f"New best model saved (val={best_val:.5f})")
 
-        # Save checkpoint every CHECKPOINT_INTERVAL epochs
-        if epoch % CHECKPOINT_INTERVAL == 0:
-            checkpoint_path = Path(f"checkpoints/epoch_{epoch}_loss_{val_avg:.5f}.pth")
-            checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-            model.save_checkpoint(checkpoint_path)
-            print(f"Checkpoint saved at epoch {epoch} to {checkpoint_path}")
-        
     print("\nTraining complete.")
     print(f"Best validation loss: {best_val:.5f}")
 
