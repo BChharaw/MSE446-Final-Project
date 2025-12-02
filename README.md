@@ -4,6 +4,49 @@ This project trains a machine-learning model to remove background noise from spe
 All configuration is handled through a single `config.json` for consistent preprocessing, training, and evaluation.
 
 ---
+## Setup — Clone, Virtual Environment, Dependencies
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/BChharaw/MSE446-Final-Project.git
+cd MSE446-Final-Project
+```
+
+### 2. Create and activate a virtual environment
+
+**macOS / Linux**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**Windows (PowerShell)**
+```bash
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+### 3. Install Python dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Download datasets and place unzipped files under 
+```
+├── data_raw/
+│   ├── speech/        # raw speech recordings
+│   └── noise/         # raw noise clips
+```
+
+For ESC 50 (noise files) we used the entire dataset, and for LibriSpeech we used the train-clean-100 subset.
+Datasets can be found by following the instructions at https://github.com/karolpiczak/ESC-50 and https://www.openslr.org/12 respectively. 
+
+### 5. Done!
+You're ready to run our 3 main scripts as described in the readme below:
+(1) preprocess.py (2) train.py (3) eval.py
+
 
 ## 1. Project Structure
 
