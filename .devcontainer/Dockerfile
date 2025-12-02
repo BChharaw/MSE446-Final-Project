@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# RUN tar -xzf train-clean-100.tar.gz -C /data
+
     # Set working directory
 WORKDIR /workspace
 

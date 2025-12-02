@@ -27,7 +27,7 @@ TRAIN_AUDIO_DIR = Path(PATHS_CFG["processed_train_dir"])
 VAL_AUDIO_DIR = Path(PATHS_CFG["processed_val_dir"])
 CHECKPOINT_PATH = Path(PATHS_CFG["checkpoint_path"])
 CHECKPOINT_INTERVAL = int(TRAIN_CFG.get("checkpoint_interval", 5))  # Save checkpoint every N epochs
-
+MODEL_TYPE = TRAIN_CFG.get("model_type", "small")
 SAMPLE_RATE = int(GLOBAL_CFG["sample_rate"])
 N_FFT = int(GLOBAL_CFG["stft"]["n_fft"])
 HOP_LENGTH = int(GLOBAL_CFG["stft"]["hop_length"])
@@ -157,6 +157,7 @@ def main():
     model = SpeechDenoisingModel(
         device=DEVICE,
         learning_rate=LEARNING_RATE,
+        model_type=MODEL_TYPE,
         checkpoint_path=str(CHECKPOINT_PATH),
         phase_support=PHASE_SUPPORT,
     )

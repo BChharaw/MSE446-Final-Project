@@ -53,7 +53,7 @@ class TemporalDenoiserNetwork(nn.Module):
 
 class RNNDenoiserNetwork(nn.Module):
     """Hybrid CNN-RNN network for speech denoising with convolutional feature extraction."""
-    def __init__(self, input_channels=1, base_filters=16, hidden_size=8, num_layers=1, dropout=0.0):
+    def __init__(self, input_channels=1, base_filters=16, hidden_size=8, num_layers=2, dropout=0.0):
         super().__init__()
         self.base_filters = base_filters
         self.hidden_size = hidden_size
@@ -107,7 +107,7 @@ class RNNDenoiserNetwork(nn.Module):
 
 class UNetDenoiserNetwork(nn.Module):
     """U-Net architecture for speech denoising with skip connections and attention."""
-    def __init__(self, input_channels=2, base_filters=8):
+    def __init__(self, input_channels=1, base_filters=16):
         super().__init__()
         self.base_filters = base_filters
         output_channels = 1
@@ -218,10 +218,19 @@ class UNetDenoiserNetwork(nn.Module):
 
 class SpeechDenoisingModel:
     """Wraps network, optimizer, and inference methods."""
-    def __init__(self, device="cpu", learning_rate=1e-3, checkpoint_path="checkpoints/best.pth", phase_support=True):
+    def __init__(self, device="cpu", learning_rate=1e-3, model_type = "small", checkpoint_path="checkpoints/best.pth", phase_support=True):
         self.device = torch.device(device)
         # Use UNet with 2 input channels and 2 output channels for magnitude + phase
-        self.model = RNNDenoiserNetwork(input_channels=1).to(self.device)
+        if model_type == "small":
+            self.model = SmallDenoiserNetwork(input_channels=1).to(self.device)
+        elif model_type == "temporal":
+            self.model = TemporalDenoiserNetwork(input_channels=1).to(self.device)
+        elif model_type == "rnn":
+            self.model = RNNDenoiserNetwork(input_channels=1, num_layers=1).to(self.device)
+        elif model_type == "rnn-2":
+            self.model = RNNDenoiserNetwork(input_channels=1, num_layers=2).to(self.device)
+        elif model_type == "unet":
+            self.model = UNetDenoiserNetwork(input_channels=1).to(self.device)
         self.uses_raw_audio = False
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         self.loss_function = nn.MSELoss(reduction='none')
