@@ -1,13 +1,13 @@
 # eval_model.py
-from pathlib import Path
 import json
+from pathlib import Path
 
-import torch
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import torch
 
-from classes.utils_audio import load_wav, save_wave, stft_np, magphase
 from classes.model_class import SpeechDenoisingModel
+from classes.utils_audio import load_wav, magphase, save_wave, stft_np
 
 # -----------------------
 # Config loading
@@ -86,117 +86,135 @@ def plot_model_architecture(model, out_path: Path, input_shape):
     """
     try:
         from graphviz import Digraph
-        
+
         print("Creating simplified model architecture diagram...")
-        
+
         # Create a new directed graph
-        dot = Digraph(comment='Model Architecture', format='png')
-        dot.attr(rankdir='LR', size='5,6', dpi='300', ranksep='0.2')
-        dot.attr('node', shape='box', style='rounded,filled', fontname='Arial', width='1.2', height='0.6')
-        dot.attr('edge', fontname='Arial', fontsize='5')
-        
+        dot = Digraph(comment="Model Architecture", format="png")
+        dot.attr(rankdir="LR", size="5,6", dpi="300", ranksep="0.2")
+        dot.attr(
+            "node",
+            shape="box",
+            style="rounded,filled",
+            fontname="Arial",
+            width="1.2",
+            height="0.6",
+        )
+        dot.attr("edge", fontname="Arial", fontsize="5")
+
         # Iterate through model and extract conv/pooling/upsampling layers
         layer_count = 0
-        prev_name = 'input'
+        prev_name = "input"
         skip_connections = {}  # Track skip connections for UNet {level: last_node_name}
         encoder_outputs = {}  # Track encoder outputs by level
         current_level = 0
 
         for name, module in model.model.named_modules():
             # Detect encoder level from module name
-            if 'enc1' in name and 'enc' in name:
+            if "enc1" in name and "enc" in name:
                 current_level = 1
-            elif 'enc2' in name:
+            elif "enc2" in name:
                 current_level = 2
-            elif 'bottleneck' in name:
+            elif "bottleneck" in name:
                 current_level = 0
-            elif 'up2' in name or 'dec2' in name:
+            elif "up2" in name or "dec2" in name:
                 current_level = 2
-            elif 'up1' in name or 'dec1' in name:
+            elif "up1" in name or "dec1" in name:
                 current_level = 1
-                
+
             if isinstance(module, torch.nn.Conv2d):
                 layer_count += 1
-                node_name = f'conv{layer_count}'
-                label = f'Conv2D\n{module.in_channels}→{module.out_channels}\nkernel={module.kernel_size[0]}'
-                dot.node(node_name, label, fillcolor='lightblue')
+                node_name = f"conv{layer_count}"
+                label = f"Conv2D\n{module.in_channels}→{module.out_channels}\nkernel={module.kernel_size[0]}"
+                dot.node(node_name, label, fillcolor="lightblue")
                 dot.edge(prev_name, node_name)
-                
+
                 # Track last node of each encoder level
-                if 'enc' in name and current_level > 0:
+                if "enc" in name and current_level > 0:
                     encoder_outputs[current_level] = node_name
-                    
+
                 prev_name = node_name
-                
+
             elif isinstance(module, torch.nn.ConvTranspose2d):
                 layer_count += 1
-                node_name = f'convT{layer_count}'
-                label = f'ConvTranspose2D\n{module.in_channels}→{module.out_channels}\nkernel={module.kernel_size[0]}'
-                dot.node(node_name, label, fillcolor='lightyellow')
+                node_name = f"convT{layer_count}"
+                label = f"ConvTranspose2D\n{module.in_channels}→{module.out_channels}\nkernel={module.kernel_size[0]}"
+                dot.node(node_name, label, fillcolor="lightyellow")
                 dot.edge(prev_name, node_name)
-                
+
                 # Add skip connection from corresponding encoder level
                 if current_level > 0 and current_level in encoder_outputs:
-                    dot.edge(encoder_outputs[current_level], node_name, 
-                            style='dashed', color='red', label=f'skip{current_level}',
-                            constraint='false')
-                
+                    dot.edge(
+                        encoder_outputs[current_level],
+                        node_name,
+                        style="dashed",
+                        color="red",
+                        label=f"skip{current_level}",
+                        constraint="false",
+                    )
+
                 prev_name = node_name
-                
+
             elif isinstance(module, torch.nn.MaxPool2d):
                 layer_count += 1
-                node_name = f'pool{layer_count}'
-                label = f'MaxPool2D\nkernel={module.kernel_size}'
-                dot.node(node_name, label, fillcolor='lightcoral')
+                node_name = f"pool{layer_count}"
+                label = f"MaxPool2D\nkernel={module.kernel_size}"
+                dot.node(node_name, label, fillcolor="lightcoral")
                 dot.edge(prev_name, node_name)
                 prev_name = node_name
-                
+
             elif isinstance(module, torch.nn.Upsample):
                 layer_count += 1
-                node_name = f'upsample{layer_count}'
-                label = f'Upsample\nscale={module.scale_factor}'
-                dot.node(node_name, label, fillcolor='lightcoral')
+                node_name = f"upsample{layer_count}"
+                label = f"Upsample\nscale={module.scale_factor}"
+                dot.node(node_name, label, fillcolor="lightcoral")
                 dot.edge(prev_name, node_name)
                 prev_name = node_name
-                
+
             elif isinstance(module, (torch.nn.LSTM, torch.nn.GRU, torch.nn.RNN)):
                 layer_count += 1
-                node_name = f'rnn{layer_count}'
+                node_name = f"rnn{layer_count}"
                 rnn_type = module.__class__.__name__
-                label = f'{rnn_type}\ninput={module.input_size}\nhidden={module.hidden_size}\nlayers={module.num_layers}'
-                dot.node(node_name, label, fillcolor='lightpink')
+                label = f"{rnn_type}\ninput={module.input_size}\nhidden={module.hidden_size}\nlayers={module.num_layers}"
+                dot.node(node_name, label, fillcolor="lightpink")
                 dot.edge(prev_name, node_name)
                 prev_name = node_name
-                
+
         # Add output node
-        dot.node('output', f'Output\n2 channels' if PHASE_SUPPORT else 'Output\n1 channel', fillcolor='lightgreen')
-        dot.edge(prev_name, 'output')
-        
+        dot.node(
+            "output",
+            "Output\n2 channels" if PHASE_SUPPORT else "Output\n1 channel",
+            fillcolor="lightgreen",
+        )
+        dot.edge(prev_name, "output")
+
         # Save the diagram
         out_path.parent.mkdir(parents=True, exist_ok=True)
         dot.render(str(out_path.with_suffix("")), cleanup=True)
         print(f"Simplified architecture diagram saved: {out_path}")
-        
+
         # Save high-resolution PNG
         out_path.parent.mkdir(parents=True, exist_ok=True)
         dot.format = "png"
         dot.render(str(out_path.with_suffix("")), cleanup=True)
         print(f"High-resolution PNG saved: {out_path}")
-        
+
         # Also save SVG version
-        dot.format = 'svg'
-        svg_path = out_path.with_suffix('.svg')
+        dot.format = "svg"
+        svg_path = out_path.with_suffix(".svg")
         dot.render(str(svg_path.with_suffix("")), cleanup=True)
         print(f"SVG version saved: {svg_path}")
-        
+
     except ImportError:
         print("graphviz not installed. Install with: pip install graphviz")
-        print("Also ensure Graphviz system package is installed (brew install graphviz on macOS)")
+        print(
+            "Also ensure Graphviz system package is installed (brew install graphviz on macOS)"
+        )
     except Exception as e:
         print(f"Error creating model diagram: {e}")
         import traceback
+
         traceback.print_exc()
-        
 
 
 def main():
@@ -230,7 +248,7 @@ def main():
         learning_rate=1e-3,
         model_type=MODEL_TYPE,
         checkpoint_path=str(CHECKPOINT_PATH),
-        phase_support=PHASE_SUPPORT
+        phase_support=PHASE_SUPPORT,
     )
     model.load_checkpoint()
     print(f"Loaded checkpoint from {CHECKPOINT_PATH}")
@@ -238,7 +256,11 @@ def main():
     # create model architecture diagram
     if EVAL_CFG.get("vis_model", True):
         model_diagram_path = OUTPUT_DIR / "model_architecture.png"
-        plot_model_architecture(model, model_diagram_path, input_shape=(1, 2 if PHASE_SUPPORT else 1, 257, 256))
+        plot_model_architecture(
+            model,
+            model_diagram_path,
+            input_shape=(1, 2 if PHASE_SUPPORT else 1, 257, 256),
+        )
 
     # run multipass denoising
     waveforms_for_plot = []

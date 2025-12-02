@@ -1,6 +1,6 @@
 # Speech Denoising Project
 
-This project trains a machine-learning model to remove background noise from speech audio clips.  
+This project trains a machine-learning model to remove background noise from speech audio clips.
 All configuration is handled through a single `config.json` for consistent preprocessing, training, and evaluation.
 
 ---
@@ -40,12 +40,13 @@ config.json
 ```
 
 You can modify:
-- noise mixing settings  
-- STFT parameters  
-- number of examples  
-- training hyperparameters  
-- evaluation device  
-- which validation file to denoise  
+
+- noise mixing settings
+- STFT parameters
+- number of examples
+- training hyperparameters
+- evaluation device
+- which validation file to denoise
 
 ---
 
@@ -58,14 +59,15 @@ python3 preprocess.py
 ```
 
 This:
+
 1. Loads raw speech + noise from `data_raw/`
 2. Randomly crops clean segments
 3. Mixes noise with SNR/gain rules in `config.json`
-4. Splits into train/val sets  
+4. Splits into train/val sets
 5. Saves:
    - `data_processed/train/audio/clean_XXXXX.wav`
    - `data_processed/train/audio/noisy_XXXXX.wav`
-   - … and matching val files  
+   - … and matching val files
 6. Produces preview spectrograms in:
    `visualizations/preprocess/spectrograms/`
 
@@ -80,11 +82,13 @@ python3 train.py
 ```
 
 This:
-- Loads processed train and val sets  
-- Converts wav → STFT magnitude  
-- Trains for a specified number of epochs  
-- Tracks validation loss  
-- Saves the best model to:  
+
+- Loads processed train and val sets
+- Converts wav → STFT magnitude
+- Trains for a specified number of epochs
+- Tracks validation loss
+- Saves the best model to:
+
   ```
   checkpoints/best.pth
   ```
@@ -102,9 +106,11 @@ python3 eval.py
 ```
 
 This:
+
 - Loads noisy validation sample (chosen via `sample_index` in `config.json`)
 - Runs one or more denoising passes (`num_passes`)
 - Saves outputs to:
+
   ```
   evaluation/results/denoised_sample###_pass#.wav
   ```
@@ -116,15 +122,20 @@ This:
 1. Add speech clips to `data_raw/speech/`
 2. Add noise clips to `data_raw/noise/`
 3. Adjust `config.json` as needed
-4. Run preprocessing  
+4. Run preprocessing
+
    ```bash
    python3 preprocess.py
    ```
-5. Train  
+
+5. Train
+
    ```bash
    python3 train.py
    ```
-6. Evaluate  
+
+6. Evaluate
+
    ```bash
    python3 eval.py
    ```
@@ -136,4 +147,4 @@ This:
 - All scripts rely on the same STFT parameters to maintain consistency.
 - Multipass inference helps remove residual noise.
 - No command-line arguments are needed; the JSON config controls everything.
-- For wandb, pip install wandb, login to your wandb account (in browser), copy your API key and then wandb login in terminal. 
+- For wandb, pip install wandb, login to your wandb account (in browser), copy your API key and then wandb login in terminal.

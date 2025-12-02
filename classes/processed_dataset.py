@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from classes.utils_audio import load_wav, stft_np, magphase
+from classes.utils_audio import load_wav, magphase, stft_np
 
 
 class ProcessedPairDataset(Dataset):

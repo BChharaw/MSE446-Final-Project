@@ -1,19 +1,19 @@
 # preprocess.py
+import json
 import random
 from pathlib import Path
-import json
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from tqdm import tqdm
 
 from classes.utils_audio import (
     collect_files,
     load_wav,
+    magphase,
     save_wave,
     set_seed,
     stft_np,
-    magphase,
 )
 
 # -----------------------
@@ -26,7 +26,7 @@ with CONFIG_PATH.open("r") as f:
 GLOBAL_CFG = CONFIG["global"]
 PATHS_CFG = CONFIG["paths"]
 PRE_CFG = CONFIG["preprocess"]
-TRAIN_CFG = CONFIG["train"]   # for train/val split
+TRAIN_CFG = CONFIG["train"]  # for train/val split
 
 # Raw data locations
 RAW_SPEECH_DIR = Path(PATHS_CFG["raw_speech_dir"]).expanduser()
@@ -46,8 +46,8 @@ CLIP_SECONDS = float(PRE_CFG["clip_seconds"])
 CLIP_LEN = int(SAMPLE_RATE * CLIP_SECONDS)
 
 # Noise mixing settings
-SNR_RANGE = tuple(PRE_CFG["snr_range_db"])        # (-5.0, 5.0)
-GAIN_RANGE = tuple(PRE_CFG["gain_range"])         # (0.1, 0.5)
+SNR_RANGE = tuple(PRE_CFG["snr_range_db"])  # (-5.0, 5.0)
+GAIN_RANGE = tuple(PRE_CFG["gain_range"])  # (0.1, 0.5)
 NOISE_PROBABILITY = float(PRE_CFG["noise_probability"])
 MAX_NOISE_OVERLAYS = int(PRE_CFG["max_noise_overlays"])
 
@@ -63,6 +63,7 @@ TRAIN_SPLIT = float(TRAIN_CFG["train_split"])
 # Helper functions
 # -----------------------
 
+
 def random_crop(signal: np.ndarray, clip_len: int) -> np.ndarray:
     """Randomly crop/pad a 1D signal to length clip_len."""
     if signal is None or len(signal) == 0:
@@ -72,13 +73,13 @@ def random_crop(signal: np.ndarray, clip_len: int) -> np.ndarray:
         signal = np.pad(signal, (0, clip_len - len(signal)))
 
     start = random.randint(0, max(0, len(signal) - clip_len))
-    return signal[start:start + clip_len]
+    return signal[start : start + clip_len]
 
 
 def mix_by_snr(clean: np.ndarray, noise: np.ndarray, snr_db: float) -> np.ndarray:
     """Return clean + scaled-noise such that resulting SNR is snr_db."""
-    signal_power = np.mean(clean ** 2) + 1e-12
-    noise_power = np.mean(noise ** 2) + 1e-12
+    signal_power = np.mean(clean**2) + 1e-12
+    noise_power = np.mean(noise**2) + 1e-12
     scale = np.sqrt(signal_power / (noise_power * 10 ** (snr_db / 10)))
     return clean + noise * scale
 
@@ -104,7 +105,7 @@ def overlay_noise(clean: np.ndarray, noise_files: list[Path]) -> np.ndarray:
         # crop noise to at most CLIP_LEN
         if len(noise) > CLIP_LEN:
             start = random.randint(0, len(noise) - CLIP_LEN)
-            noise = noise[start:start + CLIP_LEN]
+            noise = noise[start : start + CLIP_LEN]
 
         # random offset for inserting noise
         max_offset = max(0, CLIP_LEN - len(noise))
@@ -155,6 +156,7 @@ def save_side_by_side_spectrogram(
 # Main
 # -----------------------
 
+
 def main():
     set_seed(PRE_CFG.get("seed", 0))
 
@@ -181,7 +183,9 @@ def main():
     if not speech_waveforms:
         raise RuntimeError("All speech files appear empty after loading.")
 
-    print(f"Found {len(speech_waveforms)} speech file(s) and {len(noise_files)} noise file(s).")
+    print(
+        f"Found {len(speech_waveforms)} speech file(s) and {len(noise_files)} noise file(s)."
+    )
     print(f"Generating {NUM_EXAMPLES} clean/noisy pairs into train/val splits...")
 
     vis_saved = 0

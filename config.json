@@ -26,7 +26,7 @@
     "seed": 0
   },
   "train": {
-    "model_type": "unet",
+    "model_type": "rnn-2",
     "train_split": 0.9,
     "batch_size": 16,
     "epochs": 15,
@@ -38,12 +38,12 @@
     "checkpoint_interval": 5
   },
   "eval": {
-    "model_type": "unet",
+    "model_type": "rnn-2",
     "num_passes": 2,
     "device": "auto",
     "sample_index": 0,
     "phase_support": false,
-    "checkpoint_path": "checkpoints/best_Unet.pth",
+    "checkpoint_path": "checkpoints/best_RNN2-2.pth",
     "vis_model": false
   },
   "wandb": {
@@ -52,6 +52,6 @@
     "job_type": "train",
     "notes": "",
     "tags": ["RNN_exp2", "clean-100", "batch=16", "layers=2"],
-    "mode": "online"  
+    "mode": "online"
   }
 }
