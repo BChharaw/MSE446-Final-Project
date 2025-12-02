@@ -21,7 +21,7 @@
     "gain_range": [0.1, 0.5],
     "noise_probability": 0.9,
     "max_noise_overlays": 4,
-    "num_examples": 100,
+    "num_examples": 10000,
     "num_vis_samples": 10,
     "seed": 0
   },

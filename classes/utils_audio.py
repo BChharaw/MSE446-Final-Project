@@ -7,6 +7,22 @@ import numpy as np
 import soundfile as sf
 import torch
 
+# ============================================================================
+# Audio I/O and STFT utilities
+# ============================================================================
+# This module centralizes all low-level audio handling:
+#   - Loading and resampling WAV/MP3/FLAC files into mono float32 numpy arrays.
+#   - Saving waveforms back to disk in a consistent format.
+#   - Computing STFT / iSTFT in numpy-land, with a unified signature that
+#     hides whether torchaudio or librosa is actually doing the work.
+#   - Basic helpers for magnitude/phase extraction, file discovery, and
+#     reproducibility (global seed setting).
+#
+# The design goal is to allow the rest of the codebase (datasets, models,
+# training, evaluation) to rely on a small, stable API without worrying about
+# backend details or library availability differences.
+# ============================================================================
+
 # Prefer torchaudio if available for speed/resampling. Fall back to librosa + soundfile.
 try:
     import torchaudio
@@ -22,6 +38,18 @@ def load_wav(path: Path, target_sr: int = 16000) -> np.ndarray:
     """
     Load audio file (wav/mp3/flac) as mono float32 numpy array resampled to target_sr.
     Returns waveform only (shape=(n_samples,)).
+
+    Behavior:
+      - If torchaudio is available:
+          * Use torchaudio.load to support many formats and get (channels, samples).
+          * Average across channels to get mono.
+          * If the source sample rate differs from target_sr, resample using
+            torchaudio.functional.resample for consistent downstream processing.
+      - If torchaudio is not available:
+          * Use librosa.load with sr=target_sr and mono=True.
+      - In both paths:
+          * Normalize by the maximum absolute value to keep samples in [-1, 1].
+          * Return a float32 numpy array for compatibility with STFT utilities.
     """
     p = str(path)
     if HAS_TORCHAUDIO:
@@ -45,6 +73,18 @@ def load_wav(path: Path, target_sr: int = 16000) -> np.ndarray:
 
 
 def save_wave(waveform, path, sample_rate: int = 16000):
+    """
+    Save a waveform to disk as a 16-bit PCM WAV file.
+
+    Details:
+      - Accepts either numpy arrays or torch.Tensor.
+      - Any extra dimensions (e.g., batch, channels) are flattened into a
+        single 1D signal, which is sufficient for logging/inspection.
+      - Ensures float32 dtype before handing off to soundfile.
+      - Creates parent directories as needed.
+      - Uses subtype="PCM_16" to produce standard 16-bit WAV files that are
+        widely compatible with external tools and audio players.
+    """
     # Convert torch tensor to numpy
     if isinstance(waveform, torch.Tensor):
         waveform = waveform.detach().cpu().numpy()
@@ -76,6 +116,14 @@ def save_wave(waveform, path, sample_rate: int = 16000):
 def stft_np(waveform: np.ndarray, n_fft: int = 512, hop_length: int = 128):
     """
     Return complex STFT matrix (numpy). Signature matches calls in your code.
+
+    The goal of this function is to provide a unified numpy-based STFT interface:
+      - If torchaudio is available, leverage torch.stft (via a small wrapper)
+        for performance and GPU friendliness in other contexts.
+      - If not, defer to librosa.stft, which is widely available and robust.
+
+    The returned matrix is complex-valued with shape (freq_bins, time_frames),
+    and uses a Hann window with win_length = n_fft to match iSTFT assumptions.
     """
     if HAS_TORCHAUDIO:
         import torch
@@ -106,6 +154,18 @@ def stft_np(waveform: np.ndarray, n_fft: int = 512, hop_length: int = 128):
 def istft_np(spec_complex: np.ndarray, hop_length: int = 128):
     """
     Inverse STFT. Returns time-domain numpy waveform.
+
+    Implementation notes:
+      - The function mirrors stft_np and uses the same n_fft and window
+        assumptions to ensure perfect (or near-perfect) reconstruction for
+        well-behaved inputs.
+      - When using PyTorch:
+          * Convert the numpy complex array to a complex torch tensor.
+          * Use torch.istft directly, which is more consistent across
+            torchaudio versions than torchaudio.functional.istft.
+      - When using librosa:
+          * Compute n_fft from spec shape and call librosa.istft with a Hann
+            window and matching parameters.
     """
     if HAS_TORCHAUDIO:
         import torch
@@ -142,14 +202,33 @@ def istft_np(spec_complex: np.ndarray, hop_length: int = 128):
 
 
 def magphase(spec_complex: np.ndarray):
-    """Return magnitude and phase (numpy) from complex STFT matrix."""
+    """
+    Decompose a complex STFT matrix into magnitude and phase.
+
+    Returns:
+      - magnitude: np.abs(spec_complex)
+      - phase:     np.angle(spec_complex)
+
+    Keeping this logic in a dedicated helper ensures that both preprocessing
+    and inference use the exact same definition of "magnitude" and "phase".
+    """
     return np.abs(spec_complex), np.angle(spec_complex)
 
 
 def collect_files(
     directory: Path, extensions: List[str] = (".wav", ".mp3", ".flac")
 ) -> List[Path]:
-    """Recursively collect audio files. Returns sorted list of Path objects."""
+    """
+    Recursively collect audio files with given extensions.
+
+    Args:
+      directory:  Root directory to search under.
+      extensions: Tuple/list of file suffixes to include.
+
+    Returns:
+      Sorted list of Path objects, which keeps ordering stable for any
+      subsequent index-based selection (e.g., sample_index in eval).
+    """
     p = Path(directory)
     out = []
     for ext in extensions:
@@ -158,7 +237,14 @@ def collect_files(
 
 
 def set_seed(seed: int = 0) -> None:
-    """Set python/numpy/random seeds for reproducibility."""
+    """
+    Set seeds for Python's random, numpy, and (if available) torch RNGs.
+
+    This helper is used by both preprocess.py and train.py to make runs
+    reproducible, controlling:
+      - Example ordering and random choices in preprocessing.
+      - Weight initialization and any stochastic operations in PyTorch.
+    """
     random.seed(seed)
     np.random.seed(seed)
     try:

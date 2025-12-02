@@ -1,4 +1,3 @@
-# model_class.py
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +8,19 @@ from classes.utils_audio import istft_np, magphase, stft_np
 
 
 class SmallDenoiserNetwork(nn.Module):
-    """Simple CNN encoder-decoder for speech denoising."""
+    """
+    Simple CNN encoder-decoder for speech denoising.
+
+    Conceptually:
+      - Treats the log-magnitude spectrogram as a 2D "image" (freq × time).
+      - Encoder: progressively extracts higher-level local patterns via Conv2d.
+      - Middle: shallow bottleneck to mix information without further downsampling.
+      - Decoder: ConvTranspose2d upsamples back to the original resolution and
+        produces a single-channel residual/estimate map.
+
+    This is the baseline architecture against which more complex temporal or
+    U-Net-like models can be compared.
+    """
 
     def __init__(self, input_channels=1, base_filters=16):
         super().__init__()
@@ -36,7 +47,14 @@ class SmallDenoiserNetwork(nn.Module):
 
 
 class TemporalDenoiserNetwork(nn.Module):
-    """CNN with temporal convolutions for speech denoising."""
+    """
+    CNN with temporal convolutions for speech denoising.
+
+    Compared to SmallDenoiserNetwork, this variant adds explicit temporal
+    context via 1×k convolutions in the time dimension after the encoder. The
+    goal is to allow the network to model dependencies across multiple frames
+    without changing the frequency resolution.
+    """
 
     def __init__(self, input_channels=1, base_filters=16):
         super().__init__()
@@ -66,7 +84,19 @@ class TemporalDenoiserNetwork(nn.Module):
 
 
 class RNNDenoiserNetwork(nn.Module):
-    """Hybrid CNN-RNN network for speech denoising with convolutional feature extraction."""
+    """
+    Hybrid CNN-RNN network for speech denoising with convolutional feature extraction.
+
+    High-level structure:
+      - A shallow Conv2d encoder extracts local time-frequency features.
+      - For each frequency bin, an LSTM scans across time to capture temporal
+        dependencies (effectively modeling each "frequency row" as a sequence).
+      - A Conv2d decoder maps the LSTM outputs back to a single-channel
+        time-frequency representation.
+
+    This architecture is useful when you want to preserve the 2D structure
+    but add explicit sequence modeling along the time axis.
+    """
 
     def __init__(
         self,
@@ -109,11 +139,12 @@ class RNNDenoiserNetwork(nn.Module):
         # x shape: (batch, 1, freq, time)
         batch_size, channels, freq_bins, time_steps = x.shape
 
-        # Convolutional feature extraction
-        conv_features = self.conv_encoder(x)  # (batch, base_filters, freq, time)
+        # Convolutional feature extraction produces (batch, base_filters, freq, time)
+        conv_features = self.conv_encoder(x)
 
-        # Prepare for RNN: process each frequency bin over time
-        # Reshape to (batch * freq, time, base_filters)
+        # Prepare for RNN: treat each frequency bin as its own sequence over time.
+        #   (batch, base_filters, freq, time) -> (batch, freq, time, base_filters)
+        #   -> (batch * freq, time, base_filters)
         conv_features = conv_features.permute(
             0, 2, 3, 1
         )  # (batch, freq, time, base_filters)
@@ -121,22 +152,33 @@ class RNNDenoiserNetwork(nn.Module):
             batch_size * freq_bins, time_steps, self.base_filters
         )
 
-        # LSTM processing
+        # LSTM processes each (freq) sequence independently over time.
         lstm_out, _ = self.lstm(conv_features)  # (batch * freq, time, hidden_size)
 
-        # Reshape back to spatial format
-        # (batch * freq, time, hidden_size) -> (batch, hidden_size, freq, time)
+        # Reshape LSTM output back to 2D map:
+        #   (batch * freq, time, hidden_size) -> (batch, hidden_size, freq, time)
         lstm_out = lstm_out.view(batch_size, freq_bins, time_steps, self.hidden_size)
         lstm_out = lstm_out.permute(0, 3, 1, 2)  # (batch, hidden_size, freq, time)
 
-        # Convolutional decoder
+        # Convolutional decoder maps back to a single-channel denoised estimate.
         output = self.conv_decoder(lstm_out)  # (batch, 1, freq, time)
 
         return output
 
 
 class UNetDenoiserNetwork(nn.Module):
-    """U-Net architecture for speech denoising with skip connections and attention."""
+    """
+    U-Net architecture for speech denoising with skip connections and attention-like
+    behavior via concatenation.
+
+    Key ideas:
+      - Encoder path progressively downsamples and increases channels, extracting
+        higher-level features while reducing spatial (freq×time) resolution.
+      - Decoder path upsamples and concatenates encoder feature maps via skip
+        connections, helping preserve fine-grained time-frequency detail.
+      - The small depth (2 levels + bottleneck) keeps the model compact yet
+        expressive enough for spectral denoising tasks.
+    """
 
     def __init__(self, input_channels=1, base_filters=16):
         super().__init__()
@@ -200,7 +242,7 @@ class UNetDenoiserNetwork(nn.Module):
         self.final = nn.Conv2d(base_filters, output_channels, 1)
 
     def forward(self, x):
-        # Encoder
+        # Encoder: save feature maps for skip connections.
         enc1_out = self.enc1(x)
         x = self.pool1(enc1_out)
 
@@ -226,7 +268,16 @@ class UNetDenoiserNetwork(nn.Module):
         return output
 
     def _match_size(self, x, target):
-        """Match spatial dimensions of x to target using cropping or padding."""
+        """
+        Match spatial dimensions of x to target using cropping or padding.
+
+        Because pooling/upsampling chains are not always perfectly invertible
+        (e.g., odd sizes, boundary effects), encoder and decoder feature maps
+        can end up slightly misaligned by 1–2 pixels. This helper enforces
+        shape compatibility for concatenation by:
+          - Cropping x when it is larger than target.
+          - Padding x symmetrically when it is smaller than target.
+        """
         diff_h = x.shape[2] - target.shape[2]
         diff_w = x.shape[3] - target.shape[3]
 
@@ -254,7 +305,22 @@ class UNetDenoiserNetwork(nn.Module):
 
 
 class SpeechDenoisingModel:
-    """Wraps network, optimizer, and inference methods."""
+    """
+    High-level wrapper around the underlying neural network, optimizer, and
+    audio-domain inference utilities.
+
+    Responsibilities:
+      - Instantiate a chosen architecture (small / temporal / rnn / unet).
+      - Manage optimizer and loss computation (including frequency-dependent
+        weighting and optional magnitude+phase losses).
+      - Provide one-step training and evaluation helpers for both magnitude-only
+        and magnitude+phase regimes.
+      - Implement waveform-level inference: STFT → model → iSTFT.
+
+    This class is deliberately model-agnostic: as long as the underlying
+    network maps (batch, C, freq, time) to (batch, C, freq, time), the rest
+    of the logic remains unchanged.
+    """
 
     def __init__(
         self,
@@ -265,7 +331,9 @@ class SpeechDenoisingModel:
         phase_support=True,
     ):
         self.device = torch.device(device)
-        # Use UNet with 2 input channels and 2 output channels for magnitude + phase
+        # NOTE: `phase_support` determines how many channels are *used* at
+        # inference/training time; architectures themselves are constructed
+        # with 1 input channel here and are driven via stacking externally.
         if model_type == "small":
             self.model = SmallDenoiserNetwork(input_channels=1).to(self.device)
         elif model_type == "temporal":
@@ -292,7 +360,16 @@ class SpeechDenoisingModel:
         self.phase_support = phase_support  # Indicates if phase is used
 
     def _get_frequency_weights(self, freq_bins):
-        """Create frequency weights that emphasize low frequencies."""
+        """
+        Create frequency weights that emphasize low frequencies.
+
+        Rationale:
+          - Human speech and perceptual quality are more sensitive to errors
+            in low–mid frequencies than in very high frequencies.
+          - This method builds an exponentially decaying weight vector from
+            low to high frequency and normalizes it so that the *average*
+            weight is 1.0 (i.e., global loss scale remains comparable).
+        """
         if self.freq_weights is None or self.freq_weights.shape[0] != freq_bins:
             # Create exponentially decaying weights from low to high frequency
             freq_indices = torch.arange(freq_bins, dtype=torch.float32)
@@ -305,7 +382,15 @@ class SpeechDenoisingModel:
         return self.freq_weights
 
     def _frequency_weighted_loss(self, prediction, target):
-        """Compute MSE loss with frequency weighting."""
+        """
+        Compute MSE loss with frequency weighting.
+
+        This is the core building block for both magnitude-only and
+        magnitude+phase loss variants:
+          - First compute element-wise MSE.
+          - Then multiply by a frequency-dependent weight map.
+          - Finally average over all dimensions to get a scalar loss.
+        """
         freq_bins = prediction.shape[2]
         weights = self._get_frequency_weights(freq_bins)
 
@@ -319,6 +404,17 @@ class SpeechDenoisingModel:
         return weighted_loss.mean()
 
     def train_step(self, noisy_magnitude, clean_magnitude):
+        """
+        Single training step for magnitude-only denoising.
+
+        Input tensors:
+          - noisy_magnitude, clean_magnitude: (batch, freq, time)
+        Internally:
+          - Add channel dimension → (batch, 1, freq, time)
+          - Forward through model.
+          - Align shapes (crop to min freq/time) to avoid edge mismatches.
+          - Compute frequency-weighted loss and update parameters.
+        """
         self.model.train()
         noisy = noisy_magnitude.unsqueeze(1).to(self.device)
         clean = clean_magnitude.unsqueeze(1).to(self.device)
@@ -340,6 +436,13 @@ class SpeechDenoisingModel:
         return loss.item()
 
     def evaluate_step(self, noisy_magnitude, clean_magnitude):
+        """
+        Evaluation step for magnitude-only denoising.
+
+        Behavior mirrors train_step but:
+          - Runs under torch.no_grad().
+          - Returns both scalar loss and predicted magnitude (for visualization).
+        """
         self.model.eval()
         with torch.no_grad():
             noisy = noisy_magnitude.unsqueeze(1).to(self.device)
@@ -356,17 +459,43 @@ class SpeechDenoisingModel:
             return loss.item(), prediction.cpu().squeeze(1).numpy()
 
     def save_checkpoint(self, checkpoint_path=None):
+        """
+        Save model weights (state_dict) to the configured checkpoint path.
+
+        Note: Only model parameters are saved; optimizer state is not. This
+        keeps checkpoints lightweight and focuses on inference reproducibility.
+        """
         if checkpoint_path is None:
             checkpoint_path = self.checkpoint_path
         checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(self.model.state_dict(), str(checkpoint_path))
 
     def load_checkpoint(self):
+        """
+        Load model weights from self.checkpoint_path into the current model.
+
+        map_location ensures compatibility when moving checkpoints between
+        devices (e.g., training on GPU and evaluating on CPU).
+        """
         self.model.load_state_dict(
             torch.load(str(self.checkpoint_path), map_location=self.device)
         )
 
     def infer(self, noisy_waveform, n_fft, hop_length):
+        """
+        Waveform-level inference.
+
+        Pipeline:
+          1) Compute STFT of noisy waveform.
+          2) Decompose into magnitude and complex phase.
+          3) Build input tensor(s) depending on phase_support:
+             - If True: magnitude (log1p) and normalized phase are stacked
+               into 2 channels and the model is expected to output both.
+             - If False: only magnitude is fed and phase is reused from noisy.
+          4) Run model, convert outputs back to linear magnitude/phase.
+          5) Reconstruct complex STFT and run inverse STFT.
+          6) Normalize waveform to [-1, 1] to avoid clipping surprises.
+        """
         spectrum = stft_np(noisy_waveform, n_fft=n_fft, hop_length=hop_length)
         magnitude, phase = magphase(spectrum)
         magnitude_log = np.log1p(magnitude).astype(np.float32)
@@ -435,7 +564,17 @@ class SpeechDenoisingModel:
     def train_step_with_phase(
         self, noisy_magnitude, clean_magnitude, noisy_phase, clean_phase
     ):
-        """Training step with phase information."""
+        """
+        Training step when both magnitude and phase are modeled explicitly.
+
+        Inputs:
+          - noisy_magnitude, clean_magnitude: (batch, freq, time)
+          - noisy_phase, clean_phase:        (batch, freq, time) in normalized units
+
+        The method stacks magnitude and phase into a 2-channel tensor for both
+        input and target, runs the model, and optimizes a joint magnitude+phase
+        loss that accounts for the circular nature of phase.
+        """
         self.model.train()
 
         # Stack magnitude and phase as 2-channel input and target
@@ -464,7 +603,13 @@ class SpeechDenoisingModel:
     def evaluate_step_with_phase(
         self, noisy_magnitude, clean_magnitude, noisy_phase, clean_phase
     ):
-        """Evaluation step with phase information."""
+        """
+        Evaluation step with magnitude+phase.
+
+        Returns:
+          - Scalar loss.
+          - Predicted magnitude channel for analysis/visualization.
+        """
         self.model.eval()
         with torch.no_grad():
             # Stack magnitude and phase as 2-channel input and target
@@ -491,8 +636,17 @@ class SpeechDenoisingModel:
     def _magnitude_phase_loss(self, prediction, target):
         """
         Compute weighted loss for both magnitude and phase channels.
-        prediction: (batch, 2, freq, time) - channel 0: magnitude, channel 1: phase
-        target: (batch, 2, freq, time) - channel 0: magnitude, channel 1: phase
+
+        Shapes:
+          prediction: (batch, 2, freq, time) - channel 0: magnitude, channel 1: phase
+          target:     (batch, 2, freq, time) - channel 0: magnitude, channel 1: phase
+
+        Design choices:
+          - Magnitude: standard MSE with frequency weighting (as before).
+          - Phase: use circular distance by wrapping differences into [-π, π]
+            (via atan2(sin Δ, cos Δ)), then square and weight by frequency.
+          - Total loss: linear combination of both terms with configurable
+            mag_weight and phase_weight.
         """
         freq_bins = prediction.shape[2]
         weights = self._get_frequency_weights(freq_bins)
