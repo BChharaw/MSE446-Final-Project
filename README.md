@@ -43,11 +43,14 @@ pip install -r requirements.txt
 For ESC 50 (noise files) we used the entire dataset, and for LibriSpeech we used the train-clean-100 subset.
 Datasets can be found by following the instructions at https://github.com/karolpiczak/ESC-50 and https://www.openslr.org/12 respectively. 
 
+A small toy dataset is already included such that the model can be run out of the box however for the results in our report we use the above linked datasets. Routing to pull from a different folder can be found in config.json
+
 ### 5. Done!
 You're ready to run our 3 main scripts as described in the readme below:
 (1) preprocess.py (2) train.py (3) eval.py
+All edits, if any, should be made to config.json as 1, 2, and 3 are designed to run without and user file edits
 
-
+Note we use wandb so wandb login {insert wandb api key} may be required in terminal if don't have it setup already on your local machine. This is simple as creating an account, and pasting the API key found in settings.
 ## 1. Project Structure
 
 ```
@@ -119,7 +122,7 @@ This:
 ## 4. Training
 
 Train the denoising model:
-
+Selecting model type can be done in config.json. Choose from "small", "temporal", "rnn", "rnn-2" (2 LSTM layers), and "unet"
 ```bash
 python3 train.py
 ```
@@ -143,6 +146,7 @@ Training progress uses tqdm progress bars.
 ## 5. Evaluation
 
 Denoise a noisy clip from the validation set:
+Selecting model type can be done in config.json. Choose from "small", "temporal", "rnn", "rnn-2" (2 LSTM layers), and "unet"
 
 ```bash
 python3 eval.py

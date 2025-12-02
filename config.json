@@ -7,7 +7,7 @@
     }
   },
   "paths": {
-    "raw_speech_dir": "/data/LibriSpeech/train-clean-100",
+    "raw_speech_dir": "data_raw/speech",
     "raw_noise_dir": "data_raw/noise",
     "processed_train_dir": "data_processed/train/audio",
     "processed_val_dir": "data_processed/val/audio",
@@ -21,12 +21,12 @@
     "gain_range": [0.1, 0.5],
     "noise_probability": 0.9,
     "max_noise_overlays": 4,
-    "num_examples": 10000,
+    "num_examples": 100,
     "num_vis_samples": 10,
     "seed": 0
   },
   "train": {
-    "model_type": "rnn-2",
+    "model_type": "rnn-2", 
     "train_split": 0.9,
     "batch_size": 16,
     "epochs": 15,
